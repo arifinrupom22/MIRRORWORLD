@@ -1,0 +1,305 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* ------------------------------------------------------------------
+     Bright Mode (default) — palette taken from Design/MirrorWorld Pulse
+     ------------------------------------------------------------------ */
+  :root {
+    color-scheme: light;
+
+    --c-canvas: 244 246 251; /* #F4F6FB  canvas            */
+    --c-subbase: 255 255 255; /* #FFFFFF  sidebar / top bar */
+    --c-surface: 248 250 252; /* #F8FAFC  subtle surfaces   */
+    --c-panel: 255 255 255; /* #FFFFFF  cards             */
+    --c-panel2: 248 250 252; /* #F8FAFC  nested panels     */
+    --c-input: 248 250 252; /* #F8FAFC  inputs / chips     */
+    --c-popover: 255 255 255; /* #FFFFFF  popovers / toasts */
+    --c-cell: 248 250 252; /* #F8FAFC  empty cells        */
+    --c-overlay: 15 23 42; /* #0F172A  modal scrim        */
+
+    --c-line: 226 232 240; /* #E2E8F0  borders            */
+    --c-lineSoft: 237 241 247; /* #EDF1F7  hairlines          */
+    --c-lineHover: 203 213 225; /* #CBD5E1  hovered borders    */
+
+    --c-subtle: 241 245 249; /* #F1F5F9  faint fill         */
+    --c-subtleHover: 231 237 245; /* #E7EDF5  hovered faint fill */
+
+    --c-ink: 11 28 48; /* #0B1C30  primary text        */
+    --c-muted: 71 85 105; /* #475569  secondary text      */
+    --c-faint: 100 116 139; /* #64748B  tertiary text       */
+
+    --c-cyan: 14 165 233; /* #0EA5E9  primary accent      */
+    --c-blue: 2 132 199; /* #0284C7  secondary accent    */
+    --c-violet: 70 72 212; /* #4648D4  tertiary accent     */
+    --c-success: 5 150 105; /* #059669                     */
+    --c-warning: 217 119 6; /* #D97706                     */
+    --c-critical: 225 29 72; /* #E11D48                     */
+
+    --shadow-panel: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+    --shadow-float: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+    --shadow-cyan: 0 0 0 1px rgba(2, 132, 199, 0.28), 0 8px 30px -14px rgba(14, 165, 233, 0.35);
+
+    --panel-sheen: 0.5;
+    --grid-alpha: 0.55;
+  }
+
+  /* ------------------------------------------------------------------
+     Dark Mode — the original MIRRORWORLD look, unchanged
+     ------------------------------------------------------------------ */
+  [data-theme='dark'] {
+    color-scheme: dark;
+
+    --c-canvas: 8 13 24;
+    --c-subbase: 8 15 29;
+    --c-surface: 13 23 41;
+    --c-panel: 17 27 46;
+    --c-panel2: 12 21 37;
+    --c-input: 10 19 34;
+    --c-popover: 11 21 38;
+    --c-cell: 7 14 25;
+    --c-overlay: 2 6 13;
+
+    --c-line: 37 51 74;
+    --c-lineSoft: 26 37 56;
+    --c-lineHover: 58 76 105;
+
+    --c-subtle: 19 30 50;
+    --c-subtleHover: 27 39 64;
+
+    --c-ink: 241 245 252;
+    --c-muted: 154 169 191;
+    --c-faint: 107 124 147;
+
+    --c-cyan: 56 217 245;
+    --c-blue: 79 140 255;
+    --c-violet: 139 124 255;
+    --c-success: 53 211 154;
+    --c-warning: 245 184 75;
+    --c-critical: 255 100 124;
+
+    --shadow-panel: inset 0 1px 0 rgba(255, 255, 255, 0.025), 0 20px 50px -32px rgba(0, 0, 0, 0.9);
+    --shadow-float: 0 24px 70px -24px rgba(0, 0, 0, 0.85);
+    --shadow-cyan: 0 0 0 1px rgba(56, 217, 245, 0.25), 0 8px 30px -12px rgba(56, 217, 245, 0.25);
+
+    --panel-sheen: 0.013;
+    --grid-alpha: 0.11;
+  }
+
+  * {
+    border-color: var(--c-line);
+  }
+
+  html {
+    background: rgb(var(--c-canvas));
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+    min-height: 100vh;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgb(var(--c-cyan) / 0.24);
+    color: rgb(var(--c-ink));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--c-cyan) / 0.75);
+    outline-offset: 2px;
+  }
+
+  button,
+  [role='button'] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold tracking-[-0.015em];
+  }
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    opacity: 0.35;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--c-canvas));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--c-line));
+    border: 2px solid rgb(var(--c-canvas));
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--c-lineHover));
+  }
+}
+
+@layer components {
+  .app-backdrop {
+    background-color: rgb(var(--c-canvas));
+    background-image:
+      radial-gradient(1000px 460px at 72% -12%, rgb(var(--c-blue) / 0.07), transparent 65%),
+      radial-gradient(760px 400px at 8% 8%, rgb(var(--c-cyan) / 0.05), transparent 65%),
+      linear-gradient(rgb(var(--c-line) / var(--grid-alpha)) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--c-line) / var(--grid-alpha)) 1px, transparent 1px);
+    background-size: auto, auto, 64px 64px, 64px 64px;
+    background-position: center top, left top, -1px -1px, -1px -1px;
+  }
+
+  .panel {
+    @apply relative rounded-[10px] border border-line bg-panel shadow-panel;
+    background-image: linear-gradient(180deg, rgb(255 255 255 / var(--panel-sheen)), transparent 34%);
+  }
+
+  .panel-flat {
+    @apply relative rounded-[10px] border border-line bg-panel2;
+  }
+
+  .panel-header {
+    @apply flex items-start justify-between gap-4 border-b border-lineSoft px-5 py-4;
+  }
+
+  .telemetry {
+    @apply font-mono text-[9px] font-medium uppercase tracking-telemetry text-faint;
+  }
+
+  .telemetry-strong {
+    @apply font-mono text-[10px] font-semibold uppercase tracking-telemetry text-muted;
+  }
+
+  .metric {
+    @apply font-mono text-[28px] font-semibold leading-none tracking-[-0.04em] tabular-nums text-ink;
+  }
+
+  .hairline {
+    @apply border-t border-lineSoft;
+  }
+
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan/70 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas;
+  }
+
+  .scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--c-line)) transparent;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .corner-mark {
+    position: relative;
+  }
+  .corner-mark::before,
+  .corner-mark::after {
+    content: '';
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border-color: rgb(var(--c-cyan) / 0.4);
+    pointer-events: none;
+  }
+  .corner-mark::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+    border-top-left-radius: 3px;
+  }
+  .corner-mark::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 1px solid;
+    border-right: 1px solid;
+    border-bottom-right-radius: 3px;
+  }
+
+  .scanline {
+    background-image: repeating-linear-gradient(
+      0deg,
+      rgb(var(--c-ink) / 0.022) 0px,
+      rgb(var(--c-ink) / 0.022) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  }
+
+  .table-dense {
+    @apply w-full border-collapse text-left text-[12px];
+  }
+  .table-dense thead th {
+    @apply sticky top-0 z-10 whitespace-nowrap border-b border-line bg-panel px-3 py-2.5 font-mono text-[9px] font-medium uppercase tracking-telemetry text-faint;
+  }
+  .table-dense tbody td {
+    @apply border-b border-lineSoft px-3 py-2.5 align-middle text-muted;
+  }
+  .table-dense tbody tr:last-child td {
+    @apply border-b-0;
+  }
+  .table-dense tbody tr {
+    @apply transition-colors duration-150;
+  }
+  .table-dense tbody tr:hover {
+    background: rgb(var(--c-cyan) / 0.05);
+  }
+
+  .input-base {
+    @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transition-colors focus:border-cyan/60 focus:outline-none focus:ring-1 focus:ring-cyan/25;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded border px-1.5 py-0.5 font-mono text-[9px] font-medium uppercase tracking-[0.08em];
+  }
+
+  .kbd {
+    @apply inline-flex h-5 min-w-5 items-center justify-center rounded border border-line bg-input px-1 font-mono text-[9px] text-faint;
+  }
+
+  .link-underline {
+    @apply underline decoration-line underline-offset-4 transition-colors hover:decoration-cyan/70;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .bg-grid {
+    background-image:
+      linear-gradient(rgb(var(--c-line) / 0.7) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--c-line) / 0.7) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .mask-fade-b {
+    mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

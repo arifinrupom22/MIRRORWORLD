@@ -1,0 +1,1173 @@
+
+> frontend@0.0.0 dev
+> vite --host 127.0.0.1
+
+
+  [32m[1mVITE[22m v8.3.5[39m  [2mready in [0m[1m444[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5173[22m/[39m
+[2m2:21:00 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [optimizer] scanning dependencies...
+[2m2:21:01 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [optimizer] bundling dependencies...
+[2m2:22:44 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/shared.tsx[22m
+[2m2:23:07 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/OperationsOverviewPage.tsx[22m
+[2m9:06:14 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/ui.tsx[22m
+[2m9:08:00 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/charts.tsx[22m
+[2m9:28:41 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/node_modules/@fontsource/inter/600.css, /node_modules/@fontsource/inter/400.css, /node_modules/@fontsource/jetbrains-mono/400.css, /node_modules/@fontsource/inter/500.css, /src/index.css, /node_modules/@fontsource/inter/700.css, /node_modules/@fontsource/jetbrains-mono/500.css, /node_modules/@fontsource/jetbrains-mono/600.css[22m
+[2m9:30:11 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m9:30:12 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:259:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:259:4
+[33m  257 |  
+  258 |    .input-base {
+  259 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  260 |    }
+  261 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:30:12 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:259:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:259:4
+[33m  257 |  
+  258 |    .input-base {
+  259 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  260 |    }
+  261 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:30:37 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m9:30:38 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:30:38 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:31 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[2m9:31:31 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Brand.tsx[22m
+[2m9:31:31 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/charts.tsx[22m
+[2m9:31:31 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/layout/AppShell.tsx[22m
+[2m9:31:31 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/layout/CommandPalette.tsx[22m
+[2m9:31:31 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:31 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/layout/Sidebar.tsx[22m
+[2m9:31:31 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:31 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/layout/TopBar.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/shared.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/TimetableGrid.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/ui.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/layout/TopBar.tsx, /src/components/layout/CommandPalette.tsx, /src/components/layout/Sidebar.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/ComparisonPage.tsx, /src/pages/CampusModelPage.tsx, /src/pages/SimulationStudioPage.tsx, /src/pages/ScheduleOptimizerPage.tsx, /src/pages/DependencyExplorerPage.tsx, /src/pages/HistoryPage.tsx, /src/pages/MethodologyPage.tsx, /src/pages/DigitalCampusPage.tsx, /src/pages/OperationsOverviewPage.tsx, /src/components/layout/TopBar.tsx, /src/components/layout/CommandPalette.tsx, /src/components/shared.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/ComparisonPage.tsx, /src/pages/DependencyExplorerPage.tsx, /src/pages/CampusModelPage.tsx, /src/pages/HistoryPage.tsx, /src/pages/MethodologyPage.tsx, /src/pages/DigitalCampusPage.tsx, /src/pages/SimulationStudioPage.tsx, /src/pages/ScheduleOptimizerPage.tsx, /src/pages/OperationsOverviewPage.tsx, /src/components/layout/TopBar.tsx, /src/components/layout/CommandPalette.tsx, /src/components/shared.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/ComparisonPage.tsx, /src/pages/DependencyExplorerPage.tsx, /src/pages/CampusModelPage.tsx, /src/components/ui.tsx, /src/pages/HistoryPage.tsx, /src/pages/MethodologyPage.tsx, /src/pages/DigitalCampusPage.tsx, /src/pages/SimulationStudioPage.tsx, /src/pages/ScheduleOptimizerPage.tsx, /src/pages/OperationsOverviewPage.tsx, /src/components/layout/TopBar.tsx, /src/components/layout/CommandPalette.tsx, /src/components/layout/Sidebar.tsx, /src/components/charts.tsx and 3 more[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/CampusModelPage.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/ComparisonPage.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/DependencyExplorerPage.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/DigitalCampusPage.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/HistoryPage.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/MethodologyPage.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/OperationsOverviewPage.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/ScheduleOptimizerPage.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/SimulationStudioPage.tsx[22m
+[2m9:31:32 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/layout/AppShell.tsx, /src/pages/ComparisonPage.tsx, /src/pages/DependencyExplorerPage.tsx, /src/pages/CampusModelPage.tsx, /src/components/ui.tsx, /src/pages/HistoryPage.tsx, /src/pages/SimulationStudioPage.tsx, /src/pages/ScheduleOptimizerPage.tsx, /src/pages/OperationsOverviewPage.tsx, /src/components/layout/TopBar.tsx, /src/components/layout/CommandPalette.tsx, /src/components/layout/Sidebar.tsx, /src/components/shared.tsx[22m
+[2m9:31:34 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:34 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:35 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:35 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:35 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:35 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:35 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:35 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:35 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:35 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:35 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:36 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:36 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:36 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:36 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:36 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:36 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:36 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:37 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:37 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:37 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:37 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:38 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:38 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:38 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:38 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:38 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:38 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:38 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:39 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:39 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:39 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:39 AM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+[2m9:31:40 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:40 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:41 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:41 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:42 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:42 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:42 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:42 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:42 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:42 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:42 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:42 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:42 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:31:42 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:33:11 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:34:31 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:35:27 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:35:30 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:35:30 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:35:34 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)
+[2m9:35:36 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: [postcss] F:/BCS ICT FEST Project Showcase/frontend/src/index.css:265:5: The `bg-input` class does not exist. If `bg-input` is a custom class, make sure it is defined within a `@layer` directive.[39m
+  Plugin: [35mvite:css[39m
+  File: [36mF:/BCS ICT FEST Project Showcase/frontend/src/index.css[39m:265:4
+[33m  263 |  
+  264 |    .input-base {
+  265 |      @apply w-full rounded-md border border-line bg-input px-3 py-2 text-[12px] text-ink placeholder:text-faint transi...
+      |      ^
+  266 |    }
+  267 |  [39m
+      at Input.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\input.js:135:16)
+      at AtRule.error (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\node.js:166:32)
+      at processApply (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:380:29)
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\lib\expandApplyAtRules.js:551:9
+      at F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\processTailwindFeatures.js:55:50
+      at async plugins (F:\BCS ICT FEST Project Showcase\frontend\node_modules\tailwindcss\lib\plugin.js:38:17)
+      at async LazyResult.runAsync (F:\BCS ICT FEST Project Showcase\frontend\node_modules\postcss\lib\lazy-result.js:299:11)
+      at async runPostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30606:19)
+      at async compilePostCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30590:6)
+      at async compileCSS (file:///F:/BCS%20ICT%20FEST%20Project%20Showcase/frontend/node_modules/vite/dist/node/chunks/node.js:30520:26)

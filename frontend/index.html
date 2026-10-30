@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#F4F6FB" />
+    <meta
+      name="description"
+      content="MIRRORWORLD — a constraint-aware campus digital twin for counterfactual simulation, dependency analysis and sustainable recovery scheduling."
+    />
+    <title>MIRRORWORLD · Campus Digital Twin</title>
+  </head>
+  <body>
+    <script>
+      const savedTheme = localStorage.getItem('mirrorworld-theme')
+      if (savedTheme === 'dark') document.documentElement.dataset.theme = 'dark'
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

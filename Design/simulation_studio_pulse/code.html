@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-background":"#0b1c30","inverse-surface":"#213145","inverse-on-surface":"#eaf1ff","success-emerald-subtle":"#ecfdf5","on-surface-variant":"#3f4850","primary-fixed-dim":"#93ccff","primary-fixed":"#cce5ff","on-tertiary-fixed-variant":"#2f2ebe","surface-container-highest":"#d3e4fe","inverse-primary":"#93ccff","surface-tint":"#006398","on-tertiary-container":"#fffbff","on-primary-fixed-variant":"#004b73","error-container":"#ffdad6","warning-amber-subtle":"#fffbeb","on-tertiary-fixed":"#07006c","tertiary-fixed-dim":"#c0c1ff","slate-850":"#152033","secondary":"#006591","on-primary":"#ffffff","surface-dim":"#cbdbf5","surface-container":"#e5eeff","on-tertiary":"#ffffff","outline-variant":"#bfc7d2","surface-container-high":"#dce9ff","surface-variant":"#d3e4fe","surface-subtle":"#f8fafc","surface-hover":"#f1f5f9","secondary-fixed":"#c9e6ff","surface-base":"#f4f6fb","primary-container":"#007bb9","on-secondary":"#ffffff","tertiary-fixed":"#e1e0ff","on-surface":"#0b1c30","secondary-fixed-dim":"#89ceff","surface-card":"#ffffff","error":"#ba1a1a","tertiary-container":"#6063ee","tertiary":"#4648d4","surface-bright":"#f8f9ff","outline":"#707881","critical-rose":"#e11d48","surface-container-low":"#eff4ff","background":"#f8f9ff","primary":"#006194","surface-border":"#e2e8f0","surface":"#f8f9ff","on-secondary-container":"#004666","on-error-container":"#93000a","accent-cyan":"#22d3ee","secondary-container":"#39b8fd","on-primary-fixed":"#001d31","success-emerald":"#059669","on-secondary-fixed-variant":"#004c6e","on-primary-container":"#fdfcff","on-error":"#ffffff","surface-container-lowest":"#ffffff","on-secondary-fixed":"#001e2f","warning-amber":"#d97706","slate-900":"#0f172a","critical-rose-subtle":"#fff1f2"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-xs":"0.25rem","space-sm":"0.5rem","space-xl":"1.5rem","space-md":"0.75rem","margin":"2rem","space-lg":"1rem","gutter":"1.5rem"},"fontFamily":{"body-xs":["Geist"],"headline-lg":["Geist"],"body-md":["Geist"],"label-mono-xs":["JetBrains Mono"],"headline-md":["Geist"],"headline-xl":["Geist"],"body-sm":["Geist"],"label-mono-md":["JetBrains Mono"],"label-mono-lg":["JetBrains Mono"],"headline-sm":["Geist"],"label-mono-sm":["JetBrains Mono"]},"fontSize":{"body-xs":["0.6875rem",{"lineHeight":"0.875rem","fontWeight":"400"}],"headline-lg":["1.5rem",{"lineHeight":"2rem","letterSpacing":"-0.02em","fontWeight":"700"}],"body-md":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"400"}],"label-mono-xs":["0.5625rem",{"lineHeight":"0.75rem","letterSpacing":"0.06em","fontWeight":"700"}],"headline-md":["1.25rem",{"lineHeight":"1.75rem","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-xl":["1.875rem",{"lineHeight":"2.25rem","letterSpacing":"-0.025em","fontWeight":"700"}],"body-sm":["0.75rem",{"lineHeight":"1rem","fontWeight":"400"}],"label-mono-md":["0.75rem",{"lineHeight":"1rem","fontWeight":"500"}],"label-mono-lg":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"600"}],"headline-sm":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"700"}],"label-mono-sm":["0.625rem",{"lineHeight":"0.875rem","letterSpacing":"0.05em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface-base font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-64 bg-surface-card border-r border-surface-border z-50 flex flex-col justify-between shadow-[0_1px_3px_0_rgba(15,23,42,0.05)]"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-sm border-b border-surface-border"><img alt="MIRRORWORLD Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1W_eeD5NzEd32tDFQtWJw-31NwNf1w9zvVVfMQkrXQVwTC0aLQMa6zfZS_VYMYJTRZ4gMMDxqOfECCAEwzYrpLH7Q84Nl7ee5TMpG1vyILRPAgxErc62IYFZQ9ifhNdTfU434Mz56qgZ6vLpijXC1BaDmkKPIV9AF9h0YIP6rK0aOjqPDqBEKTlAB8t4Kpbh3TCFLvLg_UKCAeFlopxs2oCr118olIqbrzSTeT0tYTfMQ"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight leading-tight">MIRRORWORLD</span><span class="font-label-mono-xs text-label-mono-xs text-primary uppercase tracking-wider">PULSE v2.5 • CAMPUS OS</span></div></div><div class="p-space-md"><div class="bg-surface-subtle border border-surface-border rounded-lg p-space-sm flex items-center justify-between cursor-pointer hover:border-outline-variant transition-colors"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[18px]">calendar_clock</span><div class="flex flex-col"><span class="font-label-mono-xs text-label-mono-xs text-on-surface-variant uppercase">Academic Horizon</span><span class="font-body-xs text-body-xs font-semibold text-on-surface truncate">Fall 2025 • Midterms W7</span></div></div><span class="material-symbols-outlined text-outline text-[16px]">unfold_more</span></div></div><div class="px-space-md pt-space-xs"><div class="px-space-xs pb-space-xs flex items-center justify-between"><span class="font-label-mono-xs text-label-mono-xs text-outline uppercase tracking-wider">OPERATIONAL TELEMETRY</span><span class="w-1.5 h-1.5 rounded-full bg-success-emerald animate-pulse"></span></div><nav class="space-y-0.5" data-active-classes="bg-surface-container text-primary font-semibold"><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-hover hover:text-on-surface transition-all" data-path="operations-overview" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">monitoring</span><span class="font-body-sm text-body-sm">Operations Overview</span></div><span class="font-label-mono-xs text-label-mono-xs px-1.5 py-0.5 rounded bg-success-emerald-subtle text-success-emerald border border-success-emerald/20">LIVE</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-hover hover:text-on-surface transition-all" data-path="digital-campus-3d" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">view_in_ar</span><span class="font-body-sm text-body-sm">Digital Campus 3D</span></div><span class="font-label-mono-xs text-label-mono-xs px-1.5 py-0.5 rounded bg-surface-container-high text-secondary border border-secondary/20">3D</span></a><a aria-current="page" class="flex items-center justify-between px-space-sm py-2 rounded-lg transition-all bg-surface-container text-primary font-semibold" data-path="simulation-studio" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">science</span><span class="font-body-sm text-body-sm">Simulation Studio</span></div><span class="font-label-mono-xs text-label-mono-xs px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed-variant border border-primary/20">CORE</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-hover hover:text-on-surface transition-all" data-path="dependency-explorer" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">account_tree</span><span class="font-body-sm text-body-sm">Dependency Explorer</span></div><span class="font-label-mono-xs text-label-mono-xs px-1.5 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed-variant border border-tertiary/20">GRAPH</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-hover hover:text-on-surface transition-all" data-path="schedule-optimizer" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">auto_awesome</span><span class="font-body-sm text-body-sm">Schedule Optimizer</span></div><span class="font-label-mono-xs text-label-mono-xs px-1.5 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed-variant border border-secondary/20">MILP</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-hover hover:text-on-surface transition-all" data-path="scenario-comparison" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">difference</span><span class="font-body-sm text-body-sm">Scenario Comparison</span></div><span class="font-label-mono-xs text-label-mono-xs px-1.5 py-0.5 rounded bg-warning-amber-subtle text-warning-amber border border-warning-amber/30">DIFF</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-hover hover:text-on-surface transition-all" data-path="provost-audit-reports" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">fact_check</span><span class="font-body-sm text-body-sm">Provost Audit Reports</span></div><span class="font-label-mono-xs text-label-mono-xs px-1.5 py-0.5 rounded bg-critical-rose-subtle text-critical-rose border border-critical-rose/20">PDF</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-hover hover:text-on-surface transition-all" data-path="campus-configuration" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[18px]">tune</span><span class="font-body-sm text-body-sm">Campus Configuration</span></div><span class="font-label-mono-xs text-label-mono-xs px-1.5 py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-outline-variant">CONF</span></a></nav></div></div><div class="p-space-md space-y-space-md border-t border-surface-border"><div class="bg-slate-900 rounded-lg p-space-sm text-white border border-white/10 shadow-[0_4px_6px_-1px_rgba(15,23,42,0.07)]"><div class="flex items-center justify-between mb-1.5"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-accent-cyan animate-pulse"></span><span class="font-label-mono-xs text-label-mono-xs text-white uppercase tracking-wider">OR-Tools Engine</span></div><span class="font-label-mono-xs text-label-mono-xs text-accent-cyan font-bold">ONLINE</span></div><div class="flex items-center justify-between text-slate-300 font-label-mono-xs text-label-mono-xs"><span>Latency: 14ms</span><span>99.8% SLA</span></div></div><div class="flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col"><span class="font-body-sm text-body-sm font-semibold text-on-surface leading-tight truncate">Dr. Elena Rostova</span><span class="font-body-xs text-body-xs text-on-surface-variant truncate">Dean of Academic Ops</span></div></div><button class="text-outline hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">settings</span></button></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-card/95 backdrop-blur-md border-b border-surface-border z-40 px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm"><span class="material-symbols-outlined text-[18px] text-outline">domain</span><span class="font-label-mono-xs text-label-mono-xs text-outline uppercase">CAMPUS TWINS</span><span class="text-outline-variant">/</span><span class="text-on-surface-variant font-medium">Operations Console</span><span class="text-outline-variant">/</span><span class="text-primary font-semibold">Central STEM Quad • Sector A</span></div></div><div class="flex items-center gap-space-md"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-space-sm text-outline text-[18px]">search</span><input class="w-64 bg-surface-subtle border border-surface-border rounded-lg pl-8 pr-12 py-1.5 font-body-sm text-body-sm text-on-surface placeholder-outline focus:outline-none focus:border-primary focus:bg-surface-card transition-all" placeholder="Search telemetry, nodes, schedules..." type="text"/><kbd class="absolute right-space-sm font-label-mono-xs text-label-mono-xs px-1.5 py-0.5 rounded bg-surface-card border border-surface-border text-outline">⌘K</kbd></div><div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-subtle rounded-lg border border-surface-border font-label-mono-xs text-label-mono-xs text-on-surface-variant"><span class="w-2 h-2 rounded-full bg-success-emerald"></span><span>14:32:08 UTC • Synced Live</span></div><div class="flex items-center bg-surface-subtle p-0.5 rounded-lg border border-surface-border"><button class="px-2 py-1 rounded bg-surface-card shadow-sm font-label-mono-xs text-label-mono-xs text-on-surface flex items-center gap-1" title="Light Mode" type="button"><span class="material-symbols-outlined text-[14px] text-warning-amber">light_mode</span><span>Light</span></button><button class="px-2 py-1 rounded font-label-mono-xs text-label-mono-xs text-on-surface-variant hover:text-on-surface flex items-center gap-1" title="Dark Mode" type="button"><span class="material-symbols-outlined text-[14px]">dark_mode</span><span>Dark</span></button></div><button class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-hover hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-4 h-4 bg-critical-rose text-white rounded-full font-label-mono-xs text-label-mono-xs flex items-center justify-center leading-none">3</span></button><button class="flex items-center gap-1.5 px-space-md py-1.5 rounded-lg bg-gradient-to-r from-primary to-secondary text-on-primary font-body-sm text-body-sm font-semibold shadow-sm hover:opacity-95 active:scale-95 transition-all" type="button"><span class="material-symbols-outlined text-[18px]">bolt</span><span>Simulate Changes</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-16 bg-surface-base min-h-screen px-space-xl py-space-lg"><div class="flex flex-col w-full space-y-space-lg pb-space-xl">
+<!-- Top Command & Simulation Pipeline Bar -->
+<section class="flex flex-col gap-space-md bg-surface-card rounded-xl p-space-lg shadow-sm">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="space-y-1">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="font-label-mono-xs text-label-mono-xs px-2 py-0.5 rounded bg-surface-container text-primary font-bold tracking-widest uppercase">ENGINE v4.12 • DETERMINISTIC</span>
+<span class="font-label-mono-xs text-label-mono-xs px-2 py-0.5 rounded bg-success-emerald-subtle text-success-emerald font-semibold">DUAL-BOUND CONVERGED</span>
+<span class="font-label-mono-xs text-label-mono-xs text-outline">RUN_ID: sim_908f_milp</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Simulation Studio — Disruption Recovery Engine</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+          Model campus disruptions, inspect multi-hop impacts, and execute deterministic MILP reallocations across spatial and compute graphs.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm flex-wrap">
+<button class="flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-surface-subtle hover:bg-surface-hover text-on-surface font-body-sm text-body-sm font-medium shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-outline">restart_alt</span>
+<span>Reset Scenario</span>
+</button>
+<button class="flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-surface-subtle hover:bg-surface-hover text-on-surface font-body-sm text-body-sm font-medium shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-outline">balance</span>
+<span>Compare with Baseline</span>
+</button>
+<button class="flex items-center gap-1.5 px-space-lg py-2 rounded-lg bg-gradient-to-r from-primary to-secondary text-on-primary font-body-sm text-body-sm font-semibold shadow-sm hover:opacity-95 active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">publish</span>
+<span>Deploy Plan to Production (Draft)</span>
+</button>
+</div>
+</div>
+<!-- Solver Stepper & Proof Status Strip -->
+<div class="bg-surface-subtle rounded-lg p-space-sm flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-1 sm:gap-space-xs overflow-x-auto text-nowrap py-1">
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-card text-on-surface-variant font-label-mono-sm text-label-mono-sm">
+<span class="material-symbols-outlined text-success-emerald text-[16px]">check_circle</span>
+<span>01 MODEL</span>
+</div>
+<span class="text-outline text-body-xs font-label-mono-xs">→</span>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-card text-on-surface-variant font-label-mono-sm text-label-mono-sm">
+<span class="material-symbols-outlined text-success-emerald text-[16px]">check_circle</span>
+<span>02 DETECT</span>
+</div>
+<span class="text-outline text-body-xs font-label-mono-xs">→</span>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-card text-on-surface-variant font-label-mono-sm text-label-mono-sm">
+<span class="material-symbols-outlined text-success-emerald text-[16px]">check_circle</span>
+<span>03 SIMULATE</span>
+</div>
+<span class="text-outline text-body-xs font-label-mono-xs">→</span>
+<div class="flex items-center gap-1.5 px-3 py-1 rounded bg-primary text-on-primary font-label-mono-sm text-label-mono-sm shadow-sm animate-pulse">
+<span class="material-symbols-outlined text-[16px]">memory</span>
+<span>04 OPTIMIZE [ACTIVE]</span>
+</div>
+<span class="text-outline text-body-xs font-label-mono-xs">→</span>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-card text-outline font-label-mono-sm text-label-mono-sm">
+<span class="material-symbols-outlined text-[16px]">hourglass_empty</span>
+<span>05 COMPARE</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md text-right font-label-mono-xs text-label-mono-xs text-on-surface-variant shrink-0">
+<div><span class="text-outline">MILP BOUND:</span> <span class="text-success-emerald font-semibold font-label-mono-sm text-label-mono-sm">Converged (100%)</span></div>
+<div><span class="text-outline">OBJ VAL:</span> <span class="text-primary font-semibold font-label-mono-sm text-label-mono-sm">-14.28</span></div>
+<div><span class="text-outline">SOLVER TIME:</span> <span class="text-on-surface font-semibold font-label-mono-sm text-label-mono-sm">86ms</span></div>
+</div>
+</div>
+</section>
+<!-- Main Workspace: 3 Panels -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT PANEL: Scenario Setup & Constraint Knobs (320px footprint -> 3 cols) -->
+<aside class="xl:col-span-3 flex flex-col gap-space-md">
+<div class="bg-surface-card rounded-xl p-space-lg shadow-sm space-y-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">tune</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Scenario Setup</span>
+</div>
+<span class="font-label-mono-xs text-label-mono-xs px-2 py-0.5 rounded bg-critical-rose-subtle text-critical-rose font-bold">LEVEL 3 CRITICAL</span>
+</div>
+<!-- Target Facility & Disruption Card -->
+<div class="space-y-space-sm">
+<div>
+<label class="font-label-mono-xs text-label-mono-xs text-outline uppercase">Disruption Incident</label>
+<div class="p-2.5 rounded-lg bg-surface-subtle mt-1 flex items-start gap-2">
+<span class="material-symbols-outlined text-critical-rose text-[20px] shrink-0 mt-0.5">water_damage</span>
+<div>
+<div class="font-body-sm text-body-sm font-bold text-on-surface">Turing Lab 402 — Chilled Water Leak</div>
+<div class="font-body-xs text-body-xs text-on-surface-variant">Laboratory Closure / Environmental Breach</div>
+</div>
+</div>
+</div>
+<div>
+<label class="font-label-mono-xs text-label-mono-xs text-outline uppercase">Target Facility</label>
+<div class="p-2.5 rounded-lg bg-surface-subtle mt-1 space-y-1">
+<div class="font-body-sm text-body-sm font-semibold text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-outline">location_on</span>
+                Alan Turing Building • Lab 402
+              </div>
+<div class="font-label-mono-xs text-label-mono-xs text-on-surface-variant flex items-center justify-between">
+<span>Cap: 48 Seats</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container font-semibold text-primary">8x A100 GPU Pod</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-space-xs">
+<div class="p-2 rounded-lg bg-surface-subtle">
+<span class="font-label-mono-xs text-label-mono-xs text-outline uppercase block">Window</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Today, Oct 24</span>
+<span class="font-label-mono-xs text-label-mono-xs text-on-surface-variant block">09:00 - 17:00 (8.0h)</span>
+</div>
+<div class="p-2 rounded-lg bg-surface-subtle">
+<span class="font-label-mono-xs text-label-mono-xs text-outline uppercase block">Impact Footprint</span>
+<span class="font-body-sm text-body-sm font-semibold text-critical-rose">4 Sections Orphaned</span>
+<span class="font-label-mono-xs text-label-mono-xs text-on-surface-variant block">164 Students</span>
+</div>
+</div>
+</div>
+<!-- Constraint Sliders & Formulation Weights -->
+<div class="pt-space-xs space-y-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-xs text-label-mono-xs text-outline uppercase tracking-wider">Solver Formulation (MILP)</span>
+<span class="font-label-mono-xs text-label-mono-xs text-secondary font-bold">OR-TOOLS v9</span>
+</div>
+<!-- Hard constraint 1 -->
+<div class="p-2.5 rounded-lg bg-surface-subtle flex items-center justify-between">
+<div>
+<div class="font-body-sm text-body-sm font-medium text-on-surface">Instructor Max Hours</div>
+<div class="font-body-xs text-body-xs text-on-surface-variant">Hard Constraint (No Violations)</div>
+</div>
+<div class="w-10 h-6 bg-primary rounded-full p-0.5 flex items-center justify-end cursor-pointer">
+<div class="w-5 h-5 bg-on-primary rounded-full shadow-sm"></div>
+</div>
+</div>
+<!-- Soft Constraint Weight 1 -->
+<div class="p-2.5 rounded-lg bg-surface-subtle space-y-2">
+<div class="flex items-center justify-between">
+<div>
+<div class="font-body-sm text-body-sm font-medium text-on-surface">Proximity Priority</div>
+<div class="font-body-xs text-body-xs text-on-surface-variant">&lt; 200m walking radius</div>
+</div>
+<span class="font-label-mono-sm text-label-mono-sm font-bold text-primary">w = 0.85</span>
+</div>
+<div class="w-full bg-surface-dim h-2 rounded-full overflow-hidden">
+<div class="bg-gradient-to-r from-secondary to-primary h-full w-[85%] rounded-full"></div>
+</div>
+</div>
+<!-- Soft Constraint Weight 2 -->
+<div class="p-2.5 rounded-lg bg-surface-subtle space-y-2">
+<div class="flex items-center justify-between">
+<div>
+<div class="font-body-sm text-body-sm font-medium text-on-surface">GPU Capability Match</div>
+<div class="font-body-xs text-body-xs text-on-surface-variant">CUDA compute compatibility</div>
+</div>
+<span class="font-label-mono-sm text-label-mono-sm font-bold text-secondary">w = 0.95</span>
+</div>
+<div class="w-full bg-surface-dim h-2 rounded-full overflow-hidden">
+<div class="bg-gradient-to-r from-secondary-container to-secondary h-full w-[95%] rounded-full"></div>
+</div>
+</div>
+<!-- Hard toggle 2 -->
+<div class="p-2.5 rounded-lg bg-surface-subtle flex items-center justify-between opacity-70">
+<div>
+<div class="font-body-sm text-body-sm font-medium text-on-surface">Allow Weekend Shift</div>
+<div class="font-body-xs text-body-xs text-on-surface-variant">Provost Override Required</div>
+</div>
+<div class="w-10 h-6 bg-outline-variant rounded-full p-0.5 flex items-center justify-start cursor-pointer">
+<div class="w-5 h-5 bg-on-primary rounded-full shadow-sm"></div>
+</div>
+</div>
+<button class="w-full py-2.5 px-space-md rounded-lg bg-primary hover:bg-primary-container text-on-primary font-body-sm text-body-sm font-semibold flex items-center justify-center gap-2 shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">psychology</span>
+<span>Run Constraint Solver Simulation</span>
+</button>
+</div>
+</div>
+<!-- Live Incident Context Card -->
+<div class="bg-surface-card rounded-xl p-space-md shadow-sm space-y-2">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-critical-rose animate-ping"></span>
+<span class="font-label-mono-xs text-label-mono-xs text-on-surface font-bold uppercase tracking-wider">Facility Workorder #WO-8910</span>
+</div>
+<p class="font-body-xs text-body-xs text-on-surface-variant leading-relaxed">
+          Facility dispatch arrived on site 08:42. Primary chilled loop isolated. Dehumidifiers staging at Sector A service bay. Target dry-out containment: 17:30 UTC.
+        </p>
+<div class="flex items-center justify-between text-outline font-label-mono-xs text-label-mono-xs pt-1">
+<span>HVAC Team: Gamma-3</span>
+<span class="text-primary font-semibold">Sensor P-73: 88% Humid</span>
+</div>
+</div>
+</aside>
+<!-- CENTER PANEL: Topological Cascade & Reallocation Timeline (6 cols) -->
+<main class="xl:col-span-6 flex flex-col gap-space-md">
+<!-- Incident Root Notice -->
+<div class="bg-critical-rose text-white rounded-xl p-space-md shadow-md flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<div class="w-11 h-11 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-[24px]">domain_disabled</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold leading-tight">NODE OFFLINE: Alan Turing Lab 402</span>
+<span class="px-1.5 py-0.5 rounded bg-white text-critical-rose font-label-mono-xs text-label-mono-xs font-bold uppercase">Breached</span>
+</div>
+<p class="font-body-xs text-body-xs text-white/90">
+              4 sections unseated. Deterministic solver generated Plan Alpha relocation with 0 remaining schedule overlaps.
+            </p>
+</div>
+</div>
+<div class="hidden sm:flex flex-col items-end text-right shrink-0">
+<span class="font-label-mono-xs text-label-mono-xs text-white/80">CONTAINMENT ETA</span>
+<span class="font-headline-sm text-headline-sm font-bold text-white">17:30 UTC</span>
+</div>
+</div>
+<!-- 4 Class Displacement & Reallocation Cards -->
+<div class="space-y-space-sm">
+<div class="flex items-center justify-between px-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">alt_route</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Optimal Reallocation Matrix</span>
+</div>
+<span class="font-label-mono-xs text-label-mono-xs text-success-emerald font-bold">4 OF 4 REASSIGNED</span>
+</div>
+<!-- Section 1 -->
+<article class="bg-surface-card rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-surface-container text-primary font-label-mono-sm text-label-mono-sm font-bold">CS-401</span>
+<h2 class="font-body-md text-body-md font-bold text-on-surface">Distributed Systems</h2>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-mono-xs text-label-mono-xs px-2 py-0.5 rounded bg-success-emerald-subtle text-success-emerald font-bold">98% OPTIMAL MATCH</span>
+<span class="font-label-mono-xs text-label-mono-xs text-outline">09:00 - 11:00</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm bg-surface-subtle rounded-lg p-space-sm">
+<div class="space-y-1">
+<div class="font-label-mono-xs text-label-mono-xs text-critical-rose flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">close</span> ORIGINAL ROOM: Turing 402
+              </div>
+<div class="font-body-xs text-body-xs text-on-surface-variant">Enrolled: 44 Students • Prof. Chen</div>
+<div class="font-label-mono-xs text-label-mono-xs text-outline">Requires: CUDA Pod, MPI Cluster Access</div>
+</div>
+<div class="space-y-1 pl-0 md:pl-space-sm">
+<div class="font-label-mono-xs text-label-mono-xs text-success-emerald flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">check</span> REASSIGNED: Franklin Comp Lab 201
+              </div>
+<div class="font-body-xs text-body-xs text-on-surface font-medium flex items-center justify-between">
+<span>Distance: 120m (+2.1m walk)</span>
+<span class="text-primary font-semibold">48x RTX-A5000</span>
+</div>
+<div class="font-label-mono-xs text-label-mono-xs text-on-surface-variant">Zero conflict with MATH-202 lecture</div>
+</div>
+</div>
+</article>
+<!-- Section 2 -->
+<article class="bg-surface-card rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-surface-container text-primary font-label-mono-sm text-label-mono-sm font-bold">AI-602</span>
+<h2 class="font-body-md text-body-md font-bold text-on-surface">Deep Learning Workshop</h2>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-mono-xs text-label-mono-xs px-2 py-0.5 rounded bg-success-emerald-subtle text-success-emerald font-bold">99% OPTIMAL MATCH</span>
+<span class="font-label-mono-xs text-label-mono-xs text-outline">11:30 - 13:30</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm bg-surface-subtle rounded-lg p-space-sm">
+<div class="space-y-1">
+<div class="font-label-mono-xs text-label-mono-xs text-critical-rose flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">close</span> ORIGINAL ROOM: Turing 402
+              </div>
+<div class="font-body-xs text-body-xs text-on-surface-variant">Enrolled: 48 Students • Dr. Rostova</div>
+<div class="font-label-mono-xs text-label-mono-xs text-outline">Requires: PyTorch cluster, NVLink nodes</div>
+</div>
+<div class="space-y-1 pl-0 md:pl-space-sm">
+<div class="font-label-mono-xs text-label-mono-xs text-success-emerald flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">check</span> REASSIGNED: Lovelace Tech Hub 105
+              </div>
+<div class="font-body-xs text-body-xs text-on-surface font-medium flex items-center justify-between">
+<span>Distance: 85m (+1.0m walk)</span>
+<span class="text-primary font-semibold">Multi-GPU Rack Active</span>
+</div>
+<div class="font-label-mono-xs text-label-mono-xs text-on-surface-variant">Capacity: 50 seats (2 spare seats)</div>
+</div>
+</div>
+</article>
+<!-- Section 3 -->
+<article class="bg-surface-card rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-surface-container text-primary font-label-mono-sm text-label-mono-sm font-bold">DATA-305</span>
+<h2 class="font-body-md text-body-md font-bold text-on-surface">Big Data Architectures</h2>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-mono-xs text-label-mono-xs px-2 py-0.5 rounded bg-success-emerald-subtle text-success-emerald font-bold">94% OPTIMAL MATCH</span>
+<span class="font-label-mono-xs text-label-mono-xs text-outline">14:00 - 16:00</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm bg-surface-subtle rounded-lg p-space-sm">
+<div class="space-y-1">
+<div class="font-label-mono-xs text-label-mono-xs text-critical-rose flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">close</span> ORIGINAL ROOM: Turing 402
+              </div>
+<div class="font-body-xs text-body-xs text-on-surface-variant">Enrolled: 40 Students • Prof. Vance</div>
+<div class="font-label-mono-xs text-label-mono-xs text-outline">Requires: Spark nodes, Gigabit switch</div>
+</div>
+<div class="space-y-1 pl-0 md:pl-space-sm">
+<div class="font-label-mono-xs text-label-mono-xs text-success-emerald flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">check</span> REASSIGNED: Neumann Annex Room 12
+              </div>
+<div class="font-body-xs text-body-xs text-on-surface font-medium flex items-center justify-between">
+<span>Distance: 160m (+2.8m walk)</span>
+<span class="text-primary font-semibold">HPC Uplink Verified</span>
+</div>
+<div class="font-label-mono-xs text-label-mono-xs text-on-surface-variant">Projector &amp; dual podium pre-tested</div>
+</div>
+</div>
+</article>
+<!-- Section 4 -->
+<article class="bg-surface-card rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-surface-container text-primary font-label-mono-sm text-label-mono-sm font-bold">ROB-410</span>
+<h2 class="font-body-md text-body-md font-bold text-on-surface">Sensor Integration &amp; Kinematics</h2>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-mono-xs text-label-mono-xs px-2 py-0.5 rounded bg-success-emerald-subtle text-success-emerald font-bold">96% OPTIMAL MATCH</span>
+<span class="font-label-mono-xs text-label-mono-xs text-outline">16:30 - 18:30</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm bg-surface-subtle rounded-lg p-space-sm">
+<div class="space-y-1">
+<div class="font-label-mono-xs text-label-mono-xs text-critical-rose flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">close</span> ORIGINAL ROOM: Turing 402
+              </div>
+<div class="font-body-xs text-body-xs text-on-surface-variant">Enrolled: 32 Students • Dr. Thorne</div>
+<div class="font-label-mono-xs text-label-mono-xs text-outline">Requires: Oscilloscopes, 24V bench power</div>
+</div>
+<div class="space-y-1 pl-0 md:pl-space-sm">
+<div class="font-label-mono-xs text-label-mono-xs text-success-emerald flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">check</span> REASSIGNED: Tesla Robotics Lab 102
+              </div>
+<div class="font-body-xs text-body-xs text-on-surface font-medium flex items-center justify-between">
+<span>Distance: 190m (+3.4m walk)</span>
+<span class="text-primary font-semibold">Bench Power OK</span>
+</div>
+<div class="font-label-mono-xs text-label-mono-xs text-on-surface-variant">Mechatronics lab cleared by Dept Chair</div>
+</div>
+</div>
+</article>
+</div>
+<!-- Time-Slot Displacement Profile Gantt & Heatmap -->
+<section class="bg-surface-card rounded-xl p-space-lg shadow-sm space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="space-y-0.5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">view_timeline</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Displacement Horizon (08:00 - 19:00)</h3>
+</div>
+<p class="font-body-xs text-body-xs text-on-surface-variant">Baseline offline block vs Plan Alpha parallel relocation occupancy</p>
+</div>
+<div class="flex items-center gap-3 font-label-mono-xs text-label-mono-xs">
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-critical-rose"></span><span>Outage</span></div>
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-primary"></span><span>Relocated</span></div>
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-surface-container-highest"></span><span>Buffer</span></div>
+</div>
+</div>
+<!-- Inline Visual Gantt Visualization -->
+<div class="space-y-2 pt-1 font-label-mono-xs text-label-mono-xs">
+<!-- Timeline ticks -->
+<div class="grid grid-cols-11 text-center text-outline font-label-mono-xs text-label-mono-xs pb-1">
+<span>08:00</span><span>09:00</span><span>10:00</span><span>11:00</span><span>12:00</span><span>13:00</span><span>14:00</span><span>15:00</span><span>16:00</span><span>17:00</span><span>18:00</span>
+</div>
+<!-- Turing 402 row (Disrupted) -->
+<div class="space-y-1">
+<div class="flex items-center justify-between text-on-surface font-body-xs text-body-xs font-semibold">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-critical-rose"></span> Turing Lab 402 (Sector A)</span>
+<span class="text-critical-rose font-label-mono-xs text-label-mono-xs font-bold">OFFLINE 09:00 - 17:00</span>
+</div>
+<div class="h-8 w-full bg-surface-subtle rounded-lg flex items-center relative overflow-hidden p-1">
+<div class="absolute left-[9%] right-[27%] top-1 bottom-1 bg-critical-rose/20 rounded flex items-center justify-center text-critical-rose font-label-mono-xs text-label-mono-xs font-bold">
+                ENVIRONMENTAL OUTAGE (8.0h)
+              </div>
+</div>
+</div>
+<!-- Franklin Lab 201 row -->
+<div class="space-y-1 pt-1">
+<div class="flex items-center justify-between text-on-surface font-body-xs text-body-xs">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span> Franklin Lab 201</span>
+<span class="text-primary font-label-mono-xs text-label-mono-xs">CS-401 Assigned</span>
+</div>
+<div class="h-8 w-full bg-surface-subtle rounded-lg flex items-center relative overflow-hidden p-1">
+<div class="absolute left-[9%] w-[18%] top-1 bottom-1 bg-primary text-on-primary rounded flex items-center justify-center font-label-mono-xs text-label-mono-xs font-bold shadow-sm">
+                CS-401
+              </div>
+<div class="absolute left-[36%] w-[18%] top-1 bottom-1 bg-surface-container-high text-on-surface-variant rounded flex items-center justify-center font-label-mono-xs text-label-mono-xs">
+                ENG-101
+              </div>
+</div>
+</div>
+<!-- Lovelace 105 row -->
+<div class="space-y-1 pt-1">
+<div class="flex items-center justify-between text-on-surface font-body-xs text-body-xs">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span> Lovelace Hub 105</span>
+<span class="text-primary font-label-mono-xs text-label-mono-xs">AI-602 Assigned</span>
+</div>
+<div class="h-8 w-full bg-surface-subtle rounded-lg flex items-center relative overflow-hidden p-1">
+<div class="absolute left-[31.5%] w-[18%] top-1 bottom-1 bg-primary text-on-primary rounded flex items-center justify-center font-label-mono-xs text-label-mono-xs font-bold shadow-sm">
+                AI-602
+              </div>
+</div>
+</div>
+<!-- Neumann Annex 12 row -->
+<div class="space-y-1 pt-1">
+<div class="flex items-center justify-between text-on-surface font-body-xs text-body-xs">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span> Neumann Annex 12</span>
+<span class="text-primary font-label-mono-xs text-label-mono-xs">DATA-305 Assigned</span>
+</div>
+<div class="h-8 w-full bg-surface-subtle rounded-lg flex items-center relative overflow-hidden p-1">
+<div class="absolute left-[54%] w-[18%] top-1 bottom-1 bg-primary text-on-primary rounded flex items-center justify-center font-label-mono-xs text-label-mono-xs font-bold shadow-sm">
+                DATA-305
+              </div>
+</div>
+</div>
+<!-- Tesla 102 row -->
+<div class="space-y-1 pt-1">
+<div class="flex items-center justify-between text-on-surface font-body-xs text-body-xs">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span> Tesla Robotics 102</span>
+<span class="text-primary font-label-mono-xs text-label-mono-xs">ROB-410 Assigned</span>
+</div>
+<div class="h-8 w-full bg-surface-subtle rounded-lg flex items-center relative overflow-hidden p-1">
+<div class="absolute left-[77%] w-[18%] top-1 bottom-1 bg-primary text-on-primary rounded flex items-center justify-center font-label-mono-xs text-label-mono-xs font-bold shadow-sm">
+                ROB-410
+              </div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- RIGHT PANEL: Inference, Proof Metrics & Decision Engine (340px footprint -> 3 cols) -->
+<aside class="xl:col-span-3 flex flex-col gap-space-md">
+<!-- High Density KPI Scorecard -->
+<div class="bg-surface-card rounded-xl p-space-lg shadow-sm space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">analytics</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Solution Telemetry</span>
+</div>
+<span class="font-label-mono-xs text-label-mono-xs px-2 py-0.5 rounded bg-success-emerald-subtle text-success-emerald font-bold">100% FEASIBLE</span>
+</div>
+<div class="grid grid-cols-2 gap-space-sm">
+<div class="p-3 rounded-lg bg-surface-subtle">
+<span class="font-label-mono-xs text-label-mono-xs text-outline uppercase block">Fixed Classes</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface">4 / 4</span>
+<span class="font-label-mono-xs text-label-mono-xs text-success-emerald font-bold">100%</span>
+</div>
+<span class="font-body-xs text-body-xs text-on-surface-variant">0 Orphaned</span>
+</div>
+<div class="p-3 rounded-lg bg-surface-subtle">
+<span class="font-label-mono-xs text-label-mono-xs text-outline uppercase block">Seats Met</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface">164</span>
+<span class="font-label-mono-xs text-label-mono-xs text-outline">/ 164</span>
+</div>
+<span class="font-body-xs text-body-xs text-success-emerald font-medium">100% Capacity</span>
+</div>
+<div class="p-3 rounded-lg bg-surface-subtle">
+<span class="font-label-mono-xs text-label-mono-xs text-outline uppercase block">Room Conflicts</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-lg text-headline-lg font-bold text-success-emerald">0</span>
+<span class="font-label-mono-xs text-label-mono-xs text-outline">Left</span>
+</div>
+<span class="font-body-xs text-body-xs text-on-surface-variant">Zero Overlaps</span>
+</div>
+<div class="p-3 rounded-lg bg-surface-subtle">
+<span class="font-label-mono-xs text-label-mono-xs text-outline uppercase block">Confidence</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">98.2%</span>
+</div>
+<span class="font-body-xs text-body-xs text-on-surface-variant">Dual-simplex validated</span>
+</div>
+</div>
+<!-- Metric details list -->
+<div class="space-y-2 pt-space-xs font-body-xs text-body-xs">
+<div class="flex items-center justify-between p-2 rounded bg-surface-subtle">
+<span class="text-on-surface-variant">Hard Constraints Met:</span>
+<span class="font-label-mono-sm text-label-mono-sm font-bold text-on-surface">4 / 4 (100%)</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded bg-surface-subtle">
+<span class="text-on-surface-variant">Soft Walking Penalty:</span>
+<span class="font-label-mono-sm text-label-mono-sm font-bold text-on-surface">14.2 min (+3.4m avg)</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded bg-surface-subtle">
+<span class="text-on-surface-variant">GPU Compute Parity:</span>
+<span class="font-label-mono-sm text-label-mono-sm font-bold text-success-emerald">Full (No throttles)</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded bg-surface-subtle">
+<span class="text-on-surface-variant">Faculty Notice Readiness:</span>
+<span class="font-label-mono-sm text-label-mono-sm font-bold text-primary">Templates Ready (4/4)</span>
+</div>
+</div>
+</div>
+<!-- Explainable Optimization Rationale -->
+<div class="bg-surface-card rounded-xl p-space-lg shadow-sm space-y-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">lightbulb</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Solver Rationale</span>
+</div>
+<div class="space-y-2 font-body-xs text-body-xs text-on-surface-variant leading-relaxed">
+<p>
+<strong class="text-on-surface">CUDA Rig Match:</strong> Franklin Lab 201 was chosen over Turing B-wing because of immediate hardware parity (48x RTX-A5000) allowing uninterrupted distributed systems benchmarks.
+          </p>
+<p>
+<strong class="text-on-surface">Walking Topology:</strong> Neumann Annex was prioritized for DATA-305 over West Quad Annex to ensure zero student transfers exceeded the 200m soft boundary constraint.
+          </p>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container text-primary font-label-mono-xs text-label-mono-xs font-semibold flex items-center justify-between">
+<span>Objective Minimum</span>
+<span>Dual Gap: 0.0001%</span>
+</div>
+</div>
+<!-- Execution Actions & Decisions -->
+<div class="bg-slate-900 text-white rounded-xl p-space-lg shadow-md space-y-space-md">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-accent-cyan animate-pulse"></span>
+<span class="font-label-mono-xs text-label-mono-xs text-accent-cyan uppercase tracking-wider font-bold">DECISION GATE</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm font-bold text-white">Execute Plan Alpha</h4>
+<p class="font-body-xs text-body-xs text-slate-300">
+            Publish automated student push notifications, lock electronic door badges, and trigger faculty SMS alerts.
+          </p>
+</div>
+<div class="space-y-2 pt-1">
+<button class="w-full py-2.5 px-space-md rounded-lg bg-gradient-to-r from-primary to-secondary text-white font-body-sm text-body-sm font-bold flex items-center justify-center gap-2 shadow-sm hover:opacity-90 active:scale-98 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Apply Plan Alpha &amp; Notify Faculty</span>
+</button>
+<button class="w-full py-2 px-space-md rounded-lg bg-slate-850 hover:bg-slate-800 text-slate-200 font-body-sm text-body-sm font-medium flex items-center justify-center gap-2 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-accent-cyan">alt_route</span>
+<span>Inspect Alternative Seed #2 (Lower Walk Time)</span>
+</button>
+<button class="w-full py-2 px-space-md rounded-lg bg-slate-850 hover:bg-slate-800 text-slate-300 font-body-xs text-body-xs font-medium flex items-center justify-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-outline">data_object</span>
+<span>Download Mathematical Proof (.JSON)</span>
+</button>
+</div>
+<div class="pt-2 text-center">
+<span class="font-label-mono-xs text-label-mono-xs text-slate-400">
+            Audit Hash: 0x8b39...4e19 • Provost Signed
+          </span>
+</div>
+</div>
+</aside>
+</div>
+</div></main></div></body></html>

@@ -1,0 +1,313 @@
+INFO:     Started server process [21120]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+[MIRRORWORLD] Seeded synthetic campus, baseline timetable and demo runs.
+INFO:     127.0.0.1:51331 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51332 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59462 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59460 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59461 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57965 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51591 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51589 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51590 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53731 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53730 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53729 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55430 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55429 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55428 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51386 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59028 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59027 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59026 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60937 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57705 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51448 - "POST /api/scenarios HTTP/1.1" 201 Created
+INFO:     127.0.0.1:57559 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51173 - "GET /api/scenarios/95a05b4a-4d05-44a0-b5bf-d8368a70d3b2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52335 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61839 - "GET /api/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51598 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51597 - "GET /api/compare?scenario_id=95a05b4a-4d05-44a0-b5bf-d8368a70d3b2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60056 - "GET /api/scenarios/dd351178-4aee-48a5-82ea-df9ef30ad98f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55210 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56993 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56994 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56581 - "POST /api/scenarios HTTP/1.1" 201 Created
+INFO:     127.0.0.1:55680 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64462 - "GET /api/scenarios/a42f8b62-8fb4-4deb-9b60-05b104cce48f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59738 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59739 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59740 - "GET /api/scenarios/a42f8b62-8fb4-4deb-9b60-05b104cce48f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59649 - "GET /api/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55513 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65329 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55190 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55189 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55188 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49987 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49984 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49983 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50881 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50880 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50879 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50946 - "POST /api/scenarios HTTP/1.1" 201 Created
+INFO:     127.0.0.1:50948 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50950 - "GET /api/scenarios/9ffdb0f5-90b7-40e8-b605-400ac5107ce5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59484 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59489 - "GET /api/scenarios/9ffdb0f5-90b7-40e8-b605-400ac5107ce5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59487 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60779 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60778 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60777 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58691 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58693 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58695 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58697 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58699 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58702 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58704 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58706 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61536 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61538 - "GET /api/history?limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61539 - "GET /api/history?limit=3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61541 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60030 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57746 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57747 - "GET /api/scenarios/a42f8b62-8fb4-4deb-9b60-05b104cce48f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54303 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54305 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54307 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54309 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54311 - "GET /api/scenarios/9ffdb0f5-90b7-40e8-b605-400ac5107ce5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54312 - "POST /api/jobs/nonexistent/cancel HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54314 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54316 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51796 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65060 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65062 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65064 - "POST /api/scenarios/9ffdb0f5-90b7-40e8-b605-400ac5107ce5/optimize HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:65066 - "GET /api/jobs/ce0b7cf7-698b-42c8-8952-d952b66d1380 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65069 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65070 - "GET /api/jobs/ce0b7cf7-698b-42c8-8952-d952b66d1380 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65072 - "GET /api/scenarios/9ffdb0f5-90b7-40e8-b605-400ac5107ce5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65074 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65076 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65078 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65080 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63345 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63347 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63349 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50368 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52912 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52914 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52916 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52918 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52920 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52922 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60343 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60345 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60347 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62014 - "POST /api/scenarios HTTP/1.1" 201 Created
+INFO:     127.0.0.1:64632 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53019 - "GET /api/scenarios/1bbdd600-c7e5-48fc-934a-83642983865c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53022 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53024 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54977 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49341 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49343 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49345 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:49347 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63632 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50738 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63629 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63630 - "GET /api/scenarios/1bbdd600-c7e5-48fc-934a-83642983865c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63634 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63636 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63638 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63640 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63642 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63644 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63646 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63648 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63650 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63652 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63654 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63656 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63659 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63661 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63666 - "GET /api/jobs/active/null HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62597 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62598 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61972 - "POST /api/scenarios HTTP/1.1" 201 Created
+INFO:     127.0.0.1:61974 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61976 - "GET /api/scenarios/bdfc2753-b0bb-4eec-9348-4e584ef35816 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61980 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61982 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61983 - "GET /api/scenarios/bdfc2753-b0bb-4eec-9348-4e584ef35816 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61985 - "POST /api/scenarios/bdfc2753-b0bb-4eec-9348-4e584ef35816/optimize HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:61987 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61989 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63302 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63304 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63306 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64828 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64830 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64832 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64835 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64837 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64839 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64841 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64843 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64845 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64847 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64849 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64851 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64853 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64855 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64857 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64860 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64862 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64864 - "GET /api/jobs/7ac9d480-2663-4fa6-a9dc-76b8c5e30ba9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64869 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64867 - "GET /api/scenarios/bdfc2753-b0bb-4eec-9348-4e584ef35816 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64872 - "GET /api/scenarios/bdfc2753-b0bb-4eec-9348-4e584ef35816 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64870 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64882 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64884 - "GET /api/compare?scenario_id=bdfc2753-b0bb-4eec-9348-4e584ef35816 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64883 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64881 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58971 - "GET /api/export/scenarios/bdfc2753-b0bb-4eec-9348-4e584ef35816.csv HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58000 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58001 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58002 - "GET /api/compare?scenario_id=1bbdd600-c7e5-48fc-934a-83642983865c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54059 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54061 - "GET /api/compare?scenario_id=1bbdd600-c7e5-48fc-934a-83642983865c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54060 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54058 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54063 - "GET /api/scenarios/1bbdd600-c7e5-48fc-934a-83642983865c/report HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61793 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61795 - "GET /api/scenarios/bdfc2753-b0bb-4eec-9348-4e584ef35816 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61792 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61791 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53833 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53832 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53831 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53207 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53205 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53204 - "GET /api/graph?scenario_id=bdfc2753-b0bb-4eec-9348-4e584ef35816 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53203 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53209 - "GET /api/graph/impact?node_id=room%3AFL-101&scenario_id=bdfc2753-b0bb-4eec-9348-4e584ef35816&depth=2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59926 - "GET /api/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59929 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59927 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59925 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62729 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62728 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62727 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50615 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64965 - "PATCH /api/campus/rooms/AD-101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64971 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64969 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64970 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64973 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51590 - "PATCH /api/campus/rooms/AD-101 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51596 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51595 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51598 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62966 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62968 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62965 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62964 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52294 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49975 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53791 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61231 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54145 - "GET /api/compare?scenario_id=1bbdd600-c7e5-48fc-934a-83642983865c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60078 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60079 - "GET /api/scenarios/1bbdd600-c7e5-48fc-934a-83642983865c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52475 - "GET /api/compare?scenario_id=1bbdd600-c7e5-48fc-934a-83642983865c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57415 - "GET /api/export/baseline.csv HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57418 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57417 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57416 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59008 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59009 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54142 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50400 - "POST /api/scenarios HTTP/1.1" 201 Created
+INFO:     127.0.0.1:50402 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50404 - "GET /api/scenarios/bbf4b485-0a4f-4435-8fd7-24c5071f203e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58578 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51935 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51937 - "GET /api/graph?scenario_id=bbf4b485-0a4f-4435-8fd7-24c5071f203e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51939 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51941 - "GET /api/graph/impact?node_id=room%3AFL-101&scenario_id=bbf4b485-0a4f-4435-8fd7-24c5071f203e&depth=2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51943 - "GET /api/scenarios/bbf4b485-0a4f-4435-8fd7-24c5071f203e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51945 - "GET /api/compare?scenario_id=bbf4b485-0a4f-4435-8fd7-24c5071f203e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51947 - "GET /api/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51949 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52417 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52419 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52421 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52423 - "GET /api/scenarios/bbf4b485-0a4f-4435-8fd7-24c5071f203e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52425 - "GET /api/compare?scenario_id=bbf4b485-0a4f-4435-8fd7-24c5071f203e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54919 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54920 - "GET /api/scenarios/bbf4b485-0a4f-4435-8fd7-24c5071f203e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58590 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50440 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50444 - "GET /api/scenarios/bbf4b485-0a4f-4435-8fd7-24c5071f203e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50443 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50448 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50450 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50452 - "GET /api/scenarios/bbf4b485-0a4f-4435-8fd7-24c5071f203e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50454 - "GET /api/compare?scenario_id=bbf4b485-0a4f-4435-8fd7-24c5071f203e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50456 - "GET /api/graph?scenario_id=bbf4b485-0a4f-4435-8fd7-24c5071f203e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50458 - "GET /api/graph/impact?node_id=room%3AFL-101&scenario_id=bbf4b485-0a4f-4435-8fd7-24c5071f203e&depth=2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57424 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57426 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57428 - "GET /api/scenarios/bbf4b485-0a4f-4435-8fd7-24c5071f203e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57430 - "GET /api/compare?scenario_id=bbf4b485-0a4f-4435-8fd7-24c5071f203e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55457 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55459 - "GET /api/compare?scenario_id=bbf4b485-0a4f-4435-8fd7-24c5071f203e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55458 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55456 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51970 - "GET /api/compare?scenario_id=bdfc2753-b0bb-4eec-9348-4e584ef35816 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51972 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62904 - "GET /api/compare?scenario_id=bdfc2753-b0bb-4eec-9348-4e584ef35816&plan=C HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62906 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64660 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64661 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64659 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62410 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62409 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62412 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62413 - "GET /api/compare?scenario_id=bdfc2753-b0bb-4eec-9348-4e584ef35816&plan=C HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53256 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65216 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65218 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65217 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56755 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56756 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65463 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65464 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57249 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64652 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64653 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64651 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64770 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64771 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64769 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54148 - "GET /api/scenarios HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54147 - "GET /api/campus HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54146 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60824 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55880 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55890 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55895 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60690 - "GET /api/overview HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60852 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60852 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51416 - "GET /api/health HTTP/1.1" 200 OK
