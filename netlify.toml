@@ -11,6 +11,8 @@
   to = "/index.html"
   status = 200
 
-# The FastAPI backend is not hosted on Netlify. Set VITE_API_BASE at build time
-# to the backend origin (for example https://<backend-host>) so the frontend
-# calls it directly; same-origin /api only works through the Vite dev proxy.
+[build.environment]
+  # Production React build targets the live Render backend. This is the only
+  # host-side variable the frontend build needs. The backend key, database URL
+  # and any other backend secret stay on Render and are never sent to Netlify.
+  VITE_API_BASE = "https://mirrorworld.onrender.com"
