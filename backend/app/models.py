@@ -128,6 +128,7 @@ class ScenarioPlan(Base):
     name: Mapped[str] = mapped_column(String)
     strategy: Mapped[str] = mapped_column(String)
     status: Mapped[str] = mapped_column(String)
+    source: Mapped[str] = mapped_column(String, default="solver")
     solver_status: Mapped[str] = mapped_column(String)
     objective: Mapped[float | None] = mapped_column(Float, nullable=True)
     metrics: Mapped[dict] = mapped_column(JSON, default=dict)

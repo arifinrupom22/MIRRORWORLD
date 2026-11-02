@@ -78,8 +78,10 @@ export function ScheduleOptimizerPage() {
       return
     }
     if (!selectedLabel || !plans.some((plan) => plan.label === selectedLabel)) {
-      const feasible = plans.find((plan) => plan.status === 'FEASIBLE' && plan.metrics)
-      setSelectedLabel(feasible?.label ?? plans[0].label)
+      const usable = plans.find(
+        (plan) => (plan.status === 'FEASIBLE' || plan.status === 'FEASIBLE_HEURISTIC') && plan.metrics,
+      )
+      setSelectedLabel(usable?.label ?? plans[0].label)
     }
   }, [plans, selectedLabel])
 
@@ -337,6 +339,17 @@ export function ScheduleOptimizerPage() {
           {job && job.status === 'completed' && <JobProgress job={job} />}
           {job && (job.status === 'failed' || job.status === 'infeasible') && <JobProgress job={job} />}
           {job && job.status === 'cancelled' && <JobProgress job={job} />}
+          {job?.warnings?.length ? (
+            <div className="rounded-md border border-warning/25 bg-warning/[0.04] px-3 py-2.5">
+              <div className="mb-1 flex items-center gap-1.5 font-mono text-[8px] uppercase tracking-[0.08em] text-warning">
+                <AlertTriangle className="h-3 w-3" /> Solver warnings
+              </div>
+              <ul className="space-y-1 text-[9.5px] leading-relaxed text-muted">
+                {job.warnings.map((warning) => <li key={warning}>• {warning}</li>)}
+              </ul>
+              <Button size="xs" variant="secondary" className="mt-2" onClick={start} disabled={busy}>Retry solver</Button>
+            </div>
+          ) : null}
 
           {plans.length === 0 && !busy && (
             <Panel>
@@ -372,7 +385,7 @@ export function ScheduleOptimizerPage() {
               <div className="grid gap-3 md:grid-cols-3">
                 {plans.map((plan) => {
                   const active = selected?.label === plan.label
-                  const feasible = plan.status === 'FEASIBLE' && plan.metrics
+                  const feasible = (plan.status === 'FEASIBLE' || plan.status === 'FEASIBLE_HEURISTIC') && plan.metrics
                   return (
                     <button
                       key={plan.label}
@@ -389,7 +402,7 @@ export function ScheduleOptimizerPage() {
                           <span className={cn('flex h-6 w-6 items-center justify-center rounded border font-mono text-[10px] font-semibold', active ? 'border-cyan/50 bg-cyan/10 text-cyan' : 'border-line text-muted')}>{plan.label}</span>
                           <span className="font-mono text-[8px] uppercase tracking-[0.08em] text-faint">{PLAN_STRATEGY_LABEL[plan.strategy] ?? plan.strategy}</span>
                         </span>
-                        <StatusBadge status={plan.status === 'FEASIBLE' ? 'FEASIBLE' : plan.status} />
+                        <StatusBadge status={plan.status} />
                       </div>
                       <div className="mt-2.5 text-[11.5px] font-medium text-ink">{plan.name}</div>
                       <div className="mt-2 grid grid-cols-2 gap-2">
@@ -486,7 +499,7 @@ function PlanDetail({
   onCompare: () => void
 }) {
   const [view, setView] = useState<'group' | 'room'>('group')
-  const feasible = plan.status === 'FEASIBLE' && plan.metrics
+  const feasible = (plan.status === 'FEASIBLE' || plan.status === 'FEASIBLE_HEURISTIC') && plan.metrics
   return (
     <>
       <Panel>
@@ -494,8 +507,10 @@ function PlanDetail({
           <div>
             <div className="mb-1 flex flex-wrap items-center gap-2">
               <span className="telemetry text-cyan/80">Plan {plan.label} · {plan.strategy.replace(/_/g, ' ')}</span>
+              <StatusBadge status={plan.status} />
               <StatusBadge status={plan.solver_status} />
               <Badge tone={plan.audit?.passed ? 'success' : 'critical'} dot>{plan.audit?.passed ? 'audit passed' : 'audit failed'}</Badge>
+              {plan.source === 'constructive_fallback' && <Badge tone="warning">verified heuristic · optimality not proven</Badge>}
             </div>
             <h2 className="text-[17px] font-semibold tracking-[-0.02em] text-ink">{plan.name}</h2>
             <p className="mt-1 text-[10.5px] text-faint">

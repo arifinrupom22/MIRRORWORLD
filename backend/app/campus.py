@@ -183,7 +183,13 @@ def group_sizes_with_delta(groups: list[dict], delta: int) -> dict[str, int]:
     return floors
 
 
-def allowed_rooms_for_course(course: dict, room: dict, group_size: int, respect_capacity: bool = True) -> bool:
+def allowed_rooms_for_course(
+    course: dict,
+    room: dict,
+    group_size: int,
+    respect_capacity: bool = True,
+    removed_equipment: set[str] | None = None,
+) -> bool:
     if respect_capacity and group_size > room["capacity"]:
         return False
     if course.get("needs_lab"):
@@ -191,7 +197,8 @@ def allowed_rooms_for_course(course: dict, room: dict, group_size: int, respect_
             return False
         if course["needs_lab"] not in (room.get("lab_types") or []):
             return False
-        if any(eq not in (room.get("equipment") or []) for eq in course.get("required_equipment") or []):
+        available_equipment = set(room.get("equipment") or []) - set(removed_equipment or set())
+        if any(eq not in available_equipment for eq in course.get("required_equipment") or []):
             return False
     else:
         if room["kind"] != "classroom":

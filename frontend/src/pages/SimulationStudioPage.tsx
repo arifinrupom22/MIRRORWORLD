@@ -23,9 +23,9 @@ import {
   Zap,
 } from 'lucide-react'
 import { api, ApiError } from '../lib/api'
-import { useCampus, useScenario, useScenarios } from '../lib/hooks'
+import { useCampus, useScenario, useScenarios, useTemplates } from '../lib/hooks'
 import { useAppStore, toast } from '../store/appStore'
-import type { ScenarioDetail, ScenarioKind, ScenarioParams } from '../lib/types'
+import type { ScenarioDetail, ScenarioKind, ScenarioParams, ScenarioTemplate, SeverityAssessment } from '../lib/types'
 import { cn, fmtNumber, timeAgo } from '../lib/utils'
 import {
   Badge,
@@ -45,6 +45,7 @@ import {
   Tabs,
 } from '../components/ui'
 import { ComparisonBars } from '../components/charts'
+import { DifferencePanel } from '../components/DifferencePanel'
 import { ActiveScenarioBanner, DataQualityBadge, Insight, PipelineStrip, Provenance } from '../components/shared'
 import { TimetableGrid } from '../components/TimetableGrid'
 
@@ -58,7 +59,11 @@ const EMPTY_FORM: FormState = {
   kind: 'facility',
   enrollment_delta: 0,
   unavailable_room_ids: [],
+  unavailable_building_ids: [],
   unavailable_teacher_ids: [],
+  lab_availability_pct: 100,
+  equipment_loss: [],
+  teacher_workload_delta: 0,
   lab_policy: 'default',
   operating_end_slot: 6,
   energy_mode: 'standard',
@@ -73,12 +78,29 @@ const KIND_LABEL: Record<string, string> = {
   compound: 'Compound',
 }
 
+function paramsFromForm(form: FormState): ScenarioParams {
+  return {
+    enrollment_delta: form.enrollment_delta,
+    unavailable_room_ids: [...form.unavailable_room_ids].sort(),
+    unavailable_building_ids: [...form.unavailable_building_ids].sort(),
+    unavailable_teacher_ids: [...form.unavailable_teacher_ids].sort(),
+    lab_availability_pct: form.lab_availability_pct,
+    equipment_loss: [...form.equipment_loss].sort(),
+    teacher_workload_delta: form.teacher_workload_delta,
+    lab_policy: form.lab_policy,
+    operating_end_slot: form.operating_end_slot,
+    energy_mode: form.energy_mode,
+    notes: form.notes ?? '',
+  }
+}
+
 export function SimulationStudioPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const initialId = searchParams.get('scenario')
   const [loadedId, setLoadedId] = useState<string | null>(initialId)
   const { data: campus, isLoading: campusLoading, isError: campusError, error: campusErrorValue, refetch: refetchCampus } = useCampus()
   const { data: recent, refetch: refetchScenarios } = useScenarios()
+  const { data: templateData } = useTemplates()
   const { data: loaded, isError: loadedError } = useScenario(loadedId)
   const [form, setForm] = useState<FormState>(EMPTY_FORM)
   const [result, setResult] = useState<ScenarioDetail | null>(null)
@@ -92,6 +114,8 @@ export function SimulationStudioPage() {
   const [roomQuery, setRoomQuery] = useState('')
   const [teacherQuery, setTeacherQuery] = useState('')
   const [roomBuilding, setRoomBuilding] = useState('all')
+  const [assessment, setAssessment] = useState<SeverityAssessment | null>(null)
+  const [assessing, setAssessing] = useState(false)
   const setActiveScenario = useAppStore((state) => state.setActiveScenario)
   const navigate = useNavigate()
 
@@ -100,6 +124,7 @@ export function SimulationStudioPage() {
       setResult(loaded.scenario)
       setStatus('results')
       setForm({
+        ...EMPTY_FORM,
         name: loaded.scenario.name,
         kind: loaded.scenario.kind as ScenarioKind,
         ...loaded.scenario.params,
@@ -246,6 +271,10 @@ export function SimulationStudioPage() {
     const needle = teacherQuery.trim().toLowerCase()
     return teachers.filter((teacher) => !needle || `${teacher.name} ${teacher.department}`.toLowerCase().includes(needle))
   }, [teachers, teacherQuery])
+  const equipmentTags = useMemo(
+    () => [...new Set(rooms.flatMap((room) => room.equipment ?? []))].sort(),
+    [rooms],
+  )
 
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) => setForm((previous) => ({ ...previous, [key]: value }))
   const toggleRoom = (id: string) =>
@@ -262,14 +291,51 @@ export function SimulationStudioPage() {
         ? previous.unavailable_teacher_ids.filter((item) => item !== id)
         : [...previous.unavailable_teacher_ids, id],
     }))
+  const toggleBuilding = (id: string) =>
+    setForm((previous) => ({
+      ...previous,
+      unavailable_building_ids: previous.unavailable_building_ids.includes(id)
+        ? previous.unavailable_building_ids.filter((item) => item !== id)
+        : [...previous.unavailable_building_ids, id],
+    }))
+  const toggleEquipment = (tag: string) =>
+    setForm((previous) => ({
+      ...previous,
+      equipment_loss: previous.equipment_loss.includes(tag)
+        ? previous.equipment_loss.filter((item) => item !== tag)
+        : [...previous.equipment_loss, tag],
+    }))
 
   const changed =
     form.enrollment_delta !== 0 ||
     form.unavailable_room_ids.length > 0 ||
+    form.unavailable_building_ids.length > 0 ||
     form.unavailable_teacher_ids.length > 0 ||
+    form.lab_availability_pct !== 100 ||
+    form.equipment_loss.length > 0 ||
+    form.teacher_workload_delta !== 0 ||
     form.lab_policy !== 'default' ||
     form.operating_end_slot !== 6 ||
     form.energy_mode !== 'standard'
+
+  useEffect(() => {
+    if (!campus || !changed) {
+      setAssessment(null)
+      return
+    }
+    const timer = window.setTimeout(async () => {
+      setAssessing(true)
+      try {
+        const response = await api.assess(paramsFromForm(form))
+        setAssessment(response.assessment)
+      } catch {
+        setAssessment(null)
+      } finally {
+        setAssessing(false)
+      }
+    }, 650)
+    return () => window.clearTimeout(timer)
+  }, [campus, changed, form])
 
   const validate = (): string[] => {
     const next: string[] = []
@@ -278,7 +344,9 @@ export function SimulationStudioPage() {
     if (!changed) next.push('Change at least one parameter so the simulation differs from the baseline.')
     if (form.enrollment_delta < -300 || form.enrollment_delta > 600) next.push('Enrolment delta must stay between −300 and +600 students.')
     if (form.unavailable_room_ids.length > rooms.length) next.push('Every room cannot be unavailable.')
-    if (form.operating_end_slot < 3 || form.operating_end_slot > 6) next.push('Teaching must end between slot 4 and slot 7.')
+    if (form.lab_availability_pct < 0 || form.lab_availability_pct > 100) next.push('Laboratory availability must stay between 0 and 100%.')
+    if (form.teacher_workload_delta < -10 || form.teacher_workload_delta > 10) next.push('Teacher workload delta must stay between −10 and +10 hours.')
+    if (form.operating_end_slot < 3 || form.operating_end_slot > 7) next.push('Teaching must end between slot 4 and slot 8.')
     if (form.notes && form.notes.length > 400) next.push('Notes must be 400 characters or fewer.')
     return next
   }
@@ -293,15 +361,7 @@ export function SimulationStudioPage() {
       const body = {
         name: form.name.trim(),
         kind: form.kind,
-        params: {
-          enrollment_delta: form.enrollment_delta,
-          unavailable_room_ids: [...form.unavailable_room_ids].sort(),
-          unavailable_teacher_ids: [...form.unavailable_teacher_ids].sort(),
-          lab_policy: form.lab_policy,
-          operating_end_slot: form.operating_end_slot,
-          energy_mode: form.energy_mode,
-          notes: form.notes ?? '',
-        },
+        params: paramsFromForm(form),
       }
       const response = await api.createScenario(body)
       setResult(response.scenario)
@@ -334,6 +394,27 @@ export function SimulationStudioPage() {
     setForm(preset.form())
     setErrors([])
     setStatus('idle')
+    setResetOpen(false)
+  }
+
+  const applyTemplate = (template: ScenarioTemplate) => {
+    const kindByCategory: Record<string, ScenarioKind> = {
+      Demand: 'demand',
+      Infrastructure: 'facility',
+      Staffing: 'facility',
+      Policy: 'policy',
+      Emergency: 'compound',
+    }
+    setForm({
+      ...EMPTY_FORM,
+      ...template.params,
+      name: template.name,
+      kind: kindByCategory[template.category] ?? 'compound',
+      notes: template.description,
+    })
+    setErrors([])
+    setStatus('idle')
+    setResult(null)
     setResetOpen(false)
   }
 
@@ -418,7 +499,7 @@ export function SimulationStudioPage() {
               <div className="grid gap-3 sm:grid-cols-2">
                 <Field label="Teaching ends" htmlFor="end-slot" hint="slot">
                   <Select id="end-slot" value={form.operating_end_slot} onChange={(event) => update('operating_end_slot', Number(event.target.value))}>
-                    {[3, 4, 5, 6].map((value) => <option key={value} value={value}>Through slot {value + 1} · {slots[value]?.end ?? ''}</option>)}
+                    {[3, 4, 5, 6, 7].map((value) => <option key={value} value={value}>Through slot {value + 1} · {slots[value]?.end ?? ''}</option>)}
                   </Select>
                 </Field>
                 <Field label="Lab policy" htmlFor="lab-policy" hint="constraint">
@@ -478,6 +559,62 @@ export function SimulationStudioPage() {
                     </div>
                     <div>
                       <div className="mb-2 flex items-center gap-2">
+                        <span className="font-mono text-[8px] uppercase tracking-[0.09em] text-faint">Building closures</span>
+                        {form.unavailable_building_ids.length > 0 && <button type="button" onClick={() => update('unavailable_building_ids', [])} className="focus-ring ml-auto text-[9px] text-cyan/80">clear</button>}
+                      </div>
+                      <div className="space-y-0.5 rounded border border-lineSoft p-1.5">
+                        {campus.buildings.map((building) => (
+                          <Checkbox
+                            key={building.id}
+                            checked={form.unavailable_building_ids.includes(building.id)}
+                            onChange={() => toggleBuilding(building.id)}
+                            label={
+                              <span className="flex w-full items-center justify-between gap-2">
+                                <span className="text-[9.5px] text-muted">{building.code} · {building.name}</span>
+                                <span className="text-[8.5px] text-faint">{building.room_count ?? 0} rooms</span>
+                              </span>
+                            }
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="rounded border border-lineSoft bg-subtle p-2.5">
+                      <div className="mb-1.5 flex items-center justify-between">
+                        <label htmlFor="lab-availability" className="text-[10px] font-medium text-muted">Laboratory availability</label>
+                        <span className="font-mono text-[9.5px] text-cyan">{form.lab_availability_pct}%</span>
+                      </div>
+                      <input
+                        id="lab-availability"
+                        type="range"
+                        min={0}
+                        max={100}
+                        step={5}
+                        value={form.lab_availability_pct}
+                        onChange={(event) => update('lab_availability_pct', Number(event.target.value))}
+                        className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-subtleHover accent-cyan [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border [&::-webkit-slider-thumb]:border-canvas [&::-webkit-slider-thumb]:bg-cyan"
+                      />
+                      <p className="mt-1 text-[8.5px] leading-relaxed text-faint">Labs beyond this share are closed deterministically by room id.</p>
+                    </div>
+                    <div>
+                      <div className="mb-2 flex items-center gap-2">
+                        <span className="font-mono text-[8px] uppercase tracking-[0.09em] text-faint">Equipment unavailable</span>
+                        {form.equipment_loss.length > 0 && <button type="button" onClick={() => update('equipment_loss', [])} className="focus-ring ml-auto text-[9px] text-cyan/80">clear</button>}
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {equipmentTags.map((tag) => (
+                          <button
+                            key={tag}
+                            type="button"
+                            onClick={() => toggleEquipment(tag)}
+                            className={cn('focus-ring rounded border px-1.5 py-0.5 font-mono text-[8.5px]', form.equipment_loss.includes(tag) ? 'border-critical/40 bg-critical/10 text-critical' : 'border-line text-faint hover:text-ink')}
+                          >
+                            {tag}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="mb-2 flex items-center gap-2">
                         <span className="font-mono text-[8px] uppercase tracking-[0.09em] text-faint">Unavailable instructors</span>
                         {form.unavailable_teacher_ids.length > 0 && <button type="button" onClick={() => update('unavailable_teacher_ids', [])} className="focus-ring ml-auto text-[9px] text-cyan/80">clear</button>}
                       </div>
@@ -497,6 +634,23 @@ export function SimulationStudioPage() {
                           />
                         ))}
                       </div>
+                    </div>
+                    <div className="rounded border border-lineSoft bg-subtle p-2.5">
+                      <div className="mb-1.5 flex items-center justify-between">
+                        <label htmlFor="workload-delta" className="text-[10px] font-medium text-muted">Weekly workload change</label>
+                        <span className="font-mono text-[9.5px] text-cyan">{form.teacher_workload_delta > 0 ? '+' : ''}{form.teacher_workload_delta}h</span>
+                      </div>
+                      <input
+                        id="workload-delta"
+                        type="range"
+                        min={-10}
+                        max={10}
+                        step={1}
+                        value={form.teacher_workload_delta}
+                        onChange={(event) => update('teacher_workload_delta', Number(event.target.value))}
+                        className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-subtleHover accent-cyan [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border [&::-webkit-slider-thumb]:border-canvas [&::-webkit-slider-thumb]:bg-cyan"
+                      />
+                      <p className="mt-1 text-[8.5px] leading-relaxed text-faint">Applied to every instructor's declared weekly limit and rechecked by the audit.</p>
                     </div>
                   </div>
                 )}
@@ -537,6 +691,50 @@ export function SimulationStudioPage() {
           </Panel>
 
           <Panel>
+            <PanelHeader
+              eyebrow="Preliminary assessment"
+              title="Impact severity"
+              subtitle="Calculated from dependency relationships before any recovery plan is generated."
+              action={assessment ? <Badge tone={assessment.level === 'critical' ? 'critical' : assessment.level === 'high' ? 'warning' : assessment.level === 'medium' ? 'warning' : 'success'}>{assessment.level} · {assessment.score.toFixed(0)}/100</Badge> : <Badge tone="neutral">{assessing ? 'assessing' : 'not assessed'}</Badge>}
+            />
+            {assessment ? (
+              <div className="space-y-2.5 p-4">
+                <p className="text-[10px] leading-relaxed text-muted">{assessment.summary}</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    ['Affected', assessment.affected.sessions],
+                    ['Displaced', assessment.affected.displaced],
+                    ['Groups', assessment.affected.groups],
+                  ].map(([label, value]) => (
+                    <div key={String(label)} className="rounded border border-lineSoft bg-input px-2 py-1.5">
+                      <div className="font-mono text-[7.5px] uppercase tracking-[0.06em] text-faint">{label}</div>
+                      <div className="font-mono text-[13px] text-ink">{value}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="space-y-1.5">
+                  {assessment.factors.filter((factor) => factor.contribution > 0).slice(0, 5).map((factor) => (
+                    <div key={factor.metric}>
+                      <div className="flex items-center justify-between text-[9px]">
+                        <span className="text-muted">{factor.label}</span>
+                        <span className="font-mono text-faint">{factor.value}{factor.unit} · +{factor.contribution.toFixed(1)}</span>
+                      </div>
+                      <div className="mt-0.5 h-1 overflow-hidden rounded-full bg-subtleHover">
+                        <div className="h-full rounded-full bg-warning/70" style={{ width: `${Math.min(100, factor.contribution * 4)}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[8.5px] leading-relaxed text-faint">Preliminary rubric; simulation is not an optimization result and does not assume a recovery exists.</p>
+              </div>
+            ) : (
+              <div className="px-4 py-4 text-[10px] leading-relaxed text-faint">
+                {assessing ? 'Computing dependency-aware impact…' : 'Change at least one parameter to calculate a preliminary impact.'}
+              </div>
+            )}
+          </Panel>
+
+          <Panel>
             <PanelHeader eyebrow="Starting points" title="Disruption presets" subtitle="Presets only populate inputs; you still review and execute the simulation." />
             <div className="grid gap-2 p-3">
               {presets.map((preset) => (
@@ -553,6 +751,35 @@ export function SimulationStudioPage() {
                   </span>
                 </button>
               ))}
+            </div>
+          </Panel>
+
+          <Panel>
+            <PanelHeader eyebrow="Server catalogue" title="Scenario templates" subtitle="Seven specification templates derived from the current campus. Load one, then customize every field." action={<Badge tone="neutral">{templateData?.count ?? 0}</Badge>} />
+            <div className="grid gap-2 p-3">
+              {(templateData?.templates ?? []).map((template) => (
+                <button
+                  key={template.id}
+                  type="button"
+                  onClick={() => applyTemplate(template)}
+                  className="focus-ring group flex items-start gap-2.5 rounded-md border border-lineSoft bg-subtle px-3 py-2.5 text-left transition-colors hover:border-line hover:bg-subtleHover"
+                >
+                  <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-cyan/80" />
+                  <span className="min-w-0">
+                    <span className="flex items-center gap-2">
+                      <span className="text-[11px] font-medium text-ink">{template.name}</span>
+                      <Badge tone="neutral">{template.category}</Badge>
+                    </span>
+                    <span className="mt-0.5 block text-[9.5px] leading-relaxed text-faint">{template.description}</span>
+                    <span className="mt-1 flex flex-wrap gap-1">
+                      {template.fields.slice(0, 3).map((field) => (
+                        <span key={field.key} className="font-mono text-[8px] text-faint/80">{field.label}: {Array.isArray(field.value) ? field.value.join(', ') : field.value}{field.unit ? ` ${field.unit}` : ''}</span>
+                      ))}
+                    </span>
+                  </span>
+                </button>
+              ))}
+              {!templateData?.templates.length && <p className="px-2 py-2 text-[10px] text-faint">Templates load with the campus model.</p>}
             </div>
           </Panel>
 
@@ -647,6 +874,7 @@ export function SimulationStudioPage() {
                     <div className="mb-1 flex flex-wrap items-center gap-2">
                       <span className="telemetry text-cyan/80">Simulation result</span>
                       <Badge tone="info">{KIND_LABEL[result.kind] ?? result.kind}</Badge>
+                      {result.severity && <Badge tone={result.severity.level === 'critical' ? 'critical' : result.severity.level === 'high' ? 'warning' : result.severity.level === 'medium' ? 'warning' : 'success'}>{result.severity.level} impact · {result.severity.score.toFixed(0)}</Badge>}
                       <StatusBadge status={result.status} />
                       <span className="font-mono text-[8px] text-faint">{timeAgo(result.created_at)}</span>
                     </div>
@@ -665,6 +893,8 @@ export function SimulationStudioPage() {
                   <MiniResult label="Energy" value={result.metrics.energy_kwh} baseline={campus.baseline.energy_kwh} unit="kWh/wk" tone="violet" digits={0} />
                 </div>
               </Panel>
+
+              <DifferencePanel difference={result.difference} />
 
               <div className="grid gap-5 lg:grid-cols-2">
                 <Panel>
@@ -817,7 +1047,7 @@ export function SimulationStudioPage() {
                   <div>
                     <div className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-cyan" /><span className="text-[13px] font-medium text-ink">Next: optimize recovery</span></div>
                     <p className="mt-1 max-w-xl text-[11px] leading-relaxed text-muted">
-                      Generate three auditable CP-SAT plans — minimal disruption, balanced utilization, and minimum movement — then compare them against this scenario.
+                      Generate three auditable CP-SAT strategies — space-first, energy-first and balanced — then compare them against this scenario.
                     </p>
                   </div>
                   <div className="flex shrink-0 gap-2">

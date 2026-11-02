@@ -8,6 +8,7 @@ import {
   History,
   LayoutDashboard,
   SlidersHorizontal,
+  Sparkles,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -69,6 +70,13 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: SlidersHorizontal,
         badge: 'CP-SAT',
         description: 'Generate and audit recovery plans B–D',
+      },
+      {
+        label: 'Mirror AI',
+        path: '/mirror-ai',
+        icon: Sparkles,
+        badge: 'AI',
+        description: 'Ask grounded questions about the twin',
       },
     ],
   },

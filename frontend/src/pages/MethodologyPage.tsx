@@ -201,8 +201,8 @@ function DiagnosticsTab() {
       </div>
       <div className="grid gap-2">
         <Formula title="Scheduled room-hours" formula="Σ (session length × 1.5h)" note="Only sessions with a room, day and start slot are included. Displaced sessions are counted separately." />
-        <Formula title="Total-room utilisation" formula="scheduled room-hours ÷ (available rooms × 5 days × (operating_end_slot + 1) × 1.5h)" note="Closure scenarios reduce the available-room denominator; the operating window follows the scenario policy." />
-        <Formula title="Active-room utilisation" formula="scheduled room-hours ÷ (rooms used × 5 × (operating_end_slot + 1) × 1.5h)" note="Documented complement used in the interface wherever capacity pressure is discussed." />
+        <Formula title="Total-room utilisation" formula="scheduled room-hours ÷ (available rooms × teaching days × (operating_end_slot + 1) × 1.5h)" note="Closure scenarios reduce the available-room denominator; the operating window follows the scenario policy. Teaching days come from the dataset, not a hard-coded five-day assumption." />
+        <Formula title="Active-room utilisation" formula="scheduled room-hours ÷ (rooms used × teaching days × (operating_end_slot + 1) × 1.5h)" note="Documented complement used in the interface wherever capacity pressure is discussed." />
         <Formula title="Seat utilisation" formula="Σ (group size × duration) ÷ Σ (room capacity × duration)" note="Measured only over scheduled sessions; it is not a campus-wide occupancy rate." />
         <Formula title="Energy estimate" formula="Σ (duration × (room base kW + lab equipment kW if required)) × energy factor" note="Equipment power is charged only to laboratory courses. This is an estimate from ratings, not metered consumption." />
         <Formula title="Peak demand" formula="max over slots of Σ unique room power at that slot" note="Parallel sessions in the same room contribute once; this is a conservative demand proxy." />
@@ -242,7 +242,8 @@ function OptimizationTab() {
             <li>• One room, instructor and cohort per session slot.</li>
             <li>• Room capacity ≥ group size.</li>
             <li>• Laboratory type and required equipment must match.</li>
-            <li>• Instructor unavailable slots and weekly maximum hours.</li>
+            <li>• Instructor unavailable slots.</li>
+            <li>• Weekly maximum hours are validated before solving and rechecked by the independent audit.</li>
             <li>• Closed rooms and compressed operating windows.</li>
             <li>• Laboratory afternoon-only policy when configured.</li>
             <li>• Sessions remain within the week and valid start range.</li>
@@ -252,15 +253,15 @@ function OptimizationTab() {
           <div className="flex items-center gap-1.5 text-[10.5px] font-medium text-ink"><Scale className="h-3.5 w-3.5 text-warning" /> Soft objectives</div>
           <ul className="mt-2 space-y-1 text-[9.5px] leading-relaxed text-faint">
             <li>• Estimated energy demand.</li>
-            <li>• Slack in room allocation; fewer extra rooms opened.</li>
-            <li>• Student movement from cohort home buildings.</li>
+            <li>• Active-room use: fewer extra rooms opened.</li>
+            <li>• Student movement, proxied by the number of distinct buildings each cohort uses.</li>
             <li>• Weighted sum is normalized across the observed term range.</li>
             <li>• Plan strategies: space-first, energy-first, balanced.</li>
             <li>• Time limit is per plan; feasibility is not guaranteed.</li>
           </ul>
         </div>
       </div>
-      <Formula title="Objective" formula="min Σ normalized(energy) + normalized(capacity slack) + normalized(movement) + room-opening penalty" note="Exact coefficients are generated per instance from the range of available choices; the terms remain comparative and are not monetary costs." />
+      <Formula title="Objective" formula="min Σ normalized(energy) + room-opening penalty + normalized(group-building concentration)" note="Energy is normalized across each session's eligible rooms; active-room utilisation is the inverse of rooms used because scheduled room-hours are fixed; movement is proxied by distinct (cohort, building) pairs. Exact coefficients are generated per instance; the terms are comparative and not monetary costs." />
       <div>
         <h3 className="text-[12px] font-semibold text-ink">Solver lifecycle</h3>
         <div className="mt-2 grid gap-2 sm:grid-cols-4">
@@ -268,7 +269,7 @@ function OptimizationTab() {
             ['Queued', 'A single-worker executor accepts the job. Duplicate active jobs for the same scenario are rejected.'],
             ['Running', 'Stages report model build and per-plan progress. Cancellation is requested between plans.'],
             ['Audited', 'Every plan is replayed through an independent constraint audit before persistence.'],
-            ['Persisted', 'Feasible, infeasible or unknown status is stored with warnings, objective terms and runtime.'],
+            ['Persisted', 'Feasible, verified heuristic, infeasible or unknown status is stored with warnings, objective terms and runtime.'],
           ].map(([title, text], index) => (
             <div key={title} className="rounded border border-lineSoft p-3">
               <div className="font-mono text-[8px] text-cyan/70">0{index + 1}</div>
@@ -288,7 +289,7 @@ function OptimizationTab() {
       <div className="rounded border border-warning/25 bg-warning/[0.035] p-3.5">
         <div className="flex items-center gap-2 text-[11px] font-medium text-warning"><TriangleAlert className="h-3.5 w-3.5" /> What “optimal” means here</div>
         <p className="mt-1.5 text-[10.5px] leading-relaxed text-muted">
-          CP-SAT can prove optimality for the modelled objective under its time limit. The interface reports the raw solver status and only labels a plan optimal when that status is returned. It never converts a time-limited feasible solution into an optimality claim.
+          CP-SAT can prove optimality for the modelled objective under its time limit. The interface reports the raw solver status and only labels a plan optimal when that status is returned. If CP-SAT returns UNKNOWN, a constructive schedule is independently audited and shown as FEASIBLE_HEURISTIC — never as optimal or infeasible.
         </p>
       </div>
     </div>
@@ -332,7 +333,7 @@ function VerificationTab() {
           <li>• Energy values use static room power ratings and are not metered; they are suitable for relative comparison only.</li>
           <li>• Walking distance is a building-level matrix and ignores internal routing, lifts, accessibility and weather.</li>
           <li>• SQLite persistence is local to this deployment. It is not a multi-user institutional database and does not share state between devices.</li>
-          <li>• The solver runs in a single background worker with per-plan time limits. Longer or larger instances may return FEASIBLE rather than OPTIMAL, or may be infeasible.</li>
+          <li>• The solver runs in a single background worker with per-plan time limits. Longer or larger instances may return FEASIBLE rather than OPTIMAL, may return UNKNOWN, or may be infeasible. A time-limit fallback is labelled verified heuristic.</li>
           <li>• The scenario engine reassigns existing sessions; it does not invent new teaching sessions, staff substitutions or room-opening decisions.</li>
           <li>• The recommendation score is a decision aid with explicit weights, not a universal policy or a guaranteed improvement over all alternatives.</li>
           <li>• Authentication, role-based permissions and live institutional integrations are outside the local prototype scope.</li>

@@ -23,6 +23,7 @@ import type { ComparisonRow } from '../lib/types'
 import { cn, deltaIntent, fmtNumber } from '../lib/utils'
 import { Badge, Button, EmptyState, ErrorState, LoadingBlock, Panel, PanelHeader, Segmented, Tabs } from '../components/ui'
 import { ComparisonBars, ParetoChart, type ParetoPoint } from '../components/charts'
+import { DifferencePanel } from '../components/DifferencePanel'
 import { DataQualityBadge, PipelineStrip, Provenance, ScenarioSelector } from '../components/shared'
 import { TimetableGrid } from '../components/TimetableGrid'
 
@@ -151,6 +152,10 @@ export function ComparisonPage() {
 
       <div className="mb-4"><PipelineStrip active="compare" scenarioId={scenario.id} /></div>
 
+      <div className="mb-4">
+        <DifferencePanel difference={data.difference ?? data.scenario.difference} />
+      </div>
+
       <div className="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <SummaryCard label="Hard issues" baseline={data.baseline.hard_issue_count} scenario={data.scenario_metrics.hard_issue_count} plan={selectedPlan?.metrics?.hard_issue_count ?? null} unit="" />
         <SummaryCard label="Displaced sessions" baseline={data.baseline.unassigned_sessions} scenario={data.scenario_metrics.unassigned_sessions} plan={selectedPlan?.metrics?.unassigned_sessions ?? null} unit="" />
@@ -167,6 +172,7 @@ export function ComparisonPage() {
                 <div className="flex flex-wrap items-center gap-2">
                   <h2 className="text-[13px] font-semibold text-ink">{selectedPlan ? `Plan ${selectedPlan.label} · ${selectedPlan.name}` : hasPlans ? 'Automatic plan' : 'Scenario only'}</h2>
                   {selectedPlan && <Badge tone={selectedPlan.audit?.passed ? 'success' : 'critical'} dot>{selectedPlan.audit?.passed ? 'audit passed' : 'audit failed'}</Badge>}
+                  {selectedPlan?.source === 'constructive_fallback' && <Badge tone="warning">verified heuristic</Badge>}
                 </div>
               </div>
               <div className="flex flex-wrap gap-1">

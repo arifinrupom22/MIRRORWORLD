@@ -3,14 +3,15 @@
 Model
 -----
 * ``room[s, r]`` is a Boolean: session *s* uses room *r*.
-* ``start[s]`` is an integer global slot index (day * 7 + slot).
+* ``start[s]`` is an integer global slot index (day * SLOTS_PER_DAY + slot).
 * Optional room intervals plus mandatory teacher and student-group intervals
   are handled by ``AddNoOverlap``.
 
 This compact formulation keeps the weekly timetable solvable in seconds while
 enforcing every documented hard constraint. A deterministic constructive pass
-provides the solver with a valid incumbent; CP-SAT is still responsible for the
-final plan and its objective value.
+provides the solver with a valid incumbent. If CP-SAT cannot confirm a plan
+within the time limit, that same pass is independently audited and returned as
+``FEASIBLE_HEURISTIC`` rather than mislabelled as infeasible or optimal.
 """
 
 from __future__ import annotations
@@ -109,16 +110,24 @@ def solve_plans(
             if len(solved) >= 2:
                 counts = [r["metrics"]["rooms_used"] for r in solved[-2:]]
                 room_cap = max(min(counts), int(round(sum(counts) / 2)))
+
         model, variables = _build_model(campus, sessions, ctx, plan_weights, room_cap=room_cap)
+        # The constructive pass is both the CP-SAT hint and the explicit
+        # fallback when the solver cannot confirm a solution in time. It is
+        # always independently audited before it can be returned as a plan.
         hint = _constructive_schedule(campus, sessions, ctx, plan_weights)
-        if hint and room_cap is not None and len({room for room, _d, _s in hint.values()}) > room_cap:
-            hint = None
+        hint_for_model = hint
+        if hint and room_cap is not None and len({room for room, _day, _slot in hint.values()}) > room_cap:
+            # A hint that violates the balanced room cap is not useful to the
+            # capped model, but it remains valid for the uncapped fallback.
+            hint_for_model = None
         seed_cost = None
-        if hint:
-            seed_cost = _assignment_cost(variables, hint)
+        if hint_for_model:
+            seed_cost = _assignment_cost(variables, hint_for_model)
             # CP-SAT must not return a plan worse than the valid seed.
             model.Add(variables["objective"] <= seed_cost)
-            _apply_hint(model, variables, hint)
+            _apply_hint(model, variables, hint_for_model)
+
         solver = cp_model.CpSolver()
         solver.parameters.max_time_in_seconds = max(1.0, float(time_limit))
         solver.parameters.num_search_workers = 1
@@ -129,124 +138,119 @@ def solve_plans(
         runtime = time.perf_counter() - started
         status_name = solver.StatusName(status)
         cap_fallback = False
+
         if status_name in {"INFEASIBLE", "MODEL_INVALID"} and room_cap is not None:
             # A balanced cap must never turn an otherwise feasible scenario
             # into a failure. Retry without the cap and disclose the fallback.
             cap_fallback = True
             model, variables = _build_model(campus, sessions, ctx, plan_weights)
-            if hint:
-                _apply_hint(model, variables, hint)
+            if hint_for_model:
+                _apply_hint(model, variables, hint_for_model)
             solver = cp_model.CpSolver()
             solver.parameters.max_time_in_seconds = max(1.0, float(time_limit))
             solver.parameters.num_search_workers = 1
             solver.parameters.random_seed = SOLVER_SEED
+            solver.parameters.use_optimization_hints = True
+            solver.parameters.repair_hint = True
             status = solver.Solve(model)
             runtime = time.perf_counter() - started
             status_name = solver.StatusName(status)
-        if status_name in {"INFEASIBLE", "MODEL_INVALID"}:
-            results.append(
-                {
-                    "label": spec.label,
-                    "name": spec.name,
-                    "strategy": spec.strategy,
-                    "status": "INFEASIBLE",
-                    "solver_status": status_name,
-                    "runtime_seconds": round(runtime, 2),
-                    "objective": None,
-                    "assignments": [],
-                    "metrics": None,
-                    "weights": plan_weights,
-                    "audit": {"passed": False, "checks": [], "violations": ["Solver could not satisfy the hard constraints."]},
-                    "warnings": ["No feasible timetable was found for this objective set."],
-                    "objective_terms": {},
-                }
+
+        cap_applied = room_cap is not None and not cap_fallback
+        if hint and cap_applied and len({room for room, _day, _slot in hint.values()}) > room_cap:
+            cap_applied = False
+
+        if status_name in {"OPTIMAL", "FEASIBLE"}:
+            assignments = _extract_assignments(solver, variables, sessions)
+            plan = _make_plan(
+                campus,
+                sessions,
+                ctx,
+                spec,
+                plan_weights,
+                assignments,
+                source="solver",
+                solver_status=status_name,
+                runtime=runtime,
+                objective=solver.ObjectiveValue(),
+                room_cap=room_cap if cap_applied else None,
+                cap_fallback=cap_fallback,
             )
-            continue
-        if status_name not in {"OPTIMAL", "FEASIBLE"}:
-            results.append(
-                {
-                    "label": spec.label,
-                    "name": spec.name,
-                    "strategy": spec.strategy,
-                    "status": "UNKNOWN",
-                    "solver_status": status_name,
-                    "runtime_seconds": round(runtime, 2),
-                    "objective": None,
-                    "assignments": [],
-                    "metrics": None,
-                    "weights": plan_weights,
-                    "audit": {"passed": False, "checks": [], "violations": ["Solver did not return a solution within the time limit."]},
-                    "warnings": ["Increase the solver time limit or relax a hard constraint."],
-                    "objective_terms": {},
-                }
+            if plan["audit"]["passed"]:
+                results.append(plan)
+                if progress:
+                    progress(
+                        "solved",
+                        index,
+                        len(PLAN_SPECS),
+                        f"Plan {spec.label} {status_name} in {runtime:.1f}s · {plan['metrics']['energy_kwh']:.0f} kWh/wk",
+                    )
+                continue
+            fallback = _fallback_plan(
+                campus,
+                sessions,
+                ctx,
+                spec,
+                plan_weights,
+                hint,
+                variables,
+                solver_status=status_name,
+                runtime=runtime,
+                room_cap=room_cap if cap_applied else None,
+                cap_fallback=cap_fallback,
+                solver_failed_audit=True,
             )
+            if fallback:
+                results.append(fallback)
+                if progress:
+                    progress("solved", index, len(PLAN_SPECS), f"Plan {spec.label} heuristic in {runtime:.1f}s · solver audit failed")
+                continue
+            results.append(plan)
+            if progress:
+                progress("solved", index, len(PLAN_SPECS), f"Plan {spec.label} audit failed in {runtime:.1f}s")
             continue
 
-        assignments = _extract_assignments(solver, variables, sessions)
-        result_cost = _assignment_cost(
-            variables,
-            {a["session_id"]: (a["room_id"], a["day"], a["start_slot"]) for a in assignments},
-        )
-        optimized_sessions = [dict(s) for s in sessions]
-        placement_by_id = {a["session_id"]: a for a in assignments}
-        for session in optimized_sessions:
-            placement = placement_by_id.get(session["id"])
-            session["room_id"] = placement["room_id"] if placement else None
-            session["day"] = placement["day"] if placement else None
-            session["start_slot"] = placement["start_slot"] if placement else None
-        metrics = compute_metrics(
+        fallback = _fallback_plan(
             campus,
-            optimized_sessions,
-            ctx["group_sizes"],
-            energy_factor=ctx["energy_factor"],
-            operating_end_slot=ctx["end_slot"],
-            available_room_ids=ctx["available_rooms"],
+            sessions,
+            ctx,
+            spec,
+            plan_weights,
+            hint,
+            variables,
+            solver_status=status_name,
+            runtime=runtime,
+            room_cap=room_cap if cap_applied else None,
+            cap_fallback=cap_fallback,
         )
-        audit = audit_solution(campus, optimized_sessions, ctx)
-        plan_warnings = []
-        if room_cap is not None:
-            plan_warnings.append(
-                f"Balanced plan constrained to at most {room_cap} active rooms (midpoint of Plans B and C)."
-            )
-        if cap_fallback:
-            plan_warnings.append("Balanced room cap was infeasible in this scenario; the cap was not applied.")
-        if not audit["passed"]:
-            plan_warnings.append("Independent hard-constraint audit failed; this plan is not presented as feasible.")
-        if status_name == "FEASIBLE":
-            plan_warnings.append("Best feasible solution found within the time limit; optimality was not proven.")
-        terms = {
-            "energy_kwh": metrics["energy_kwh"],
-            "active_room_utilization_pct": metrics["active_room_utilization_pct"],
-            "movement_km": metrics["movement_km"],
-            "peak_kw": metrics["peak_kw"],
-            "rooms_used": metrics["rooms_used"],
-            "seat_utilization_pct": metrics["seat_utilization_pct"],
-        }
+        if fallback:
+            results.append(fallback)
+            if progress:
+                progress(
+                    "solved",
+                    index,
+                    len(PLAN_SPECS),
+                    f"Plan {spec.label} verified heuristic in {runtime:.1f}s · CP-SAT {status_name}",
+                )
+            continue
+
+        failed_status = "INFEASIBLE" if status_name == "INFEASIBLE" else status_name
         results.append(
-            {
-                "label": spec.label,
-                "name": spec.name,
-                "strategy": spec.strategy,
-                "status": "FEASIBLE" if audit["passed"] else "AUDIT_FAILED",
-                "solver_status": status_name,
-                "runtime_seconds": round(runtime, 2),
-                "objective": round(solver.ObjectiveValue(), 2),
-                "assignments": assignments,
-                "metrics": {k: v for k, v in metrics.items() if k != "schedule"},
-                "schedule": metrics["schedule"],
-                "weights": plan_weights,
-                "audit": audit,
-                "warnings": plan_warnings,
-                "objective_terms": terms,
-            }
+            _empty_plan(
+                spec,
+                plan_weights,
+                status=failed_status,
+                solver_status=status_name,
+                runtime=runtime,
+                reason=(
+                    "The solver proved the hard constraints cannot be satisfied."
+                    if failed_status == "INFEASIBLE"
+                    else "The solver did not return a usable solution within the time limit, and no verified constructive fallback was available."
+                ),
+            )
         )
         if progress:
-            progress(
-                "solved",
-                index,
-                len(PLAN_SPECS),
-                f"Plan {spec.label} {status_name} in {runtime:.1f}s · {metrics['energy_kwh']:.0f} kWh/wk",
-            )
+            progress("solved", index, len(PLAN_SPECS), f"Plan {spec.label} {failed_status} in {runtime:.1f}s")
 
     return {
         "weights": weights,
@@ -257,19 +261,195 @@ def solve_plans(
     }
 
 
+def _assignment_map(assignments: list[dict]) -> dict[str, tuple[str, int, int]]:
+    return {
+        str(item["session_id"]): (str(item["room_id"]), int(item["day"]), int(item["start_slot"]))
+        for item in assignments
+        if item.get("room_id") is not None and item.get("day") is not None and item.get("start_slot") is not None
+    }
+
+
+def _sessions_for_assignment(sessions: list[dict], assignment: dict[str, tuple[str, int, int]]) -> list[dict]:
+    optimized = [dict(session) for session in sessions]
+    for session in optimized:
+        placement = assignment.get(str(session["id"]))
+        if placement:
+            session["room_id"], session["day"], session["start_slot"] = placement
+        else:
+            session["room_id"] = None
+            session["day"] = None
+            session["start_slot"] = None
+    return optimized
+
+
+def _make_plan(
+    campus: Campus,
+    sessions: list[dict],
+    ctx: dict,
+    spec: PlanSpec,
+    plan_weights: dict,
+    assignments: list[dict],
+    *,
+    source: str,
+    solver_status: str,
+    runtime: float,
+    objective: float | None,
+    room_cap: int | None = None,
+    cap_fallback: bool = False,
+    solver_failed_audit: bool = False,
+) -> dict:
+    assignment_map = _assignment_map(assignments)
+    optimized_sessions = _sessions_for_assignment(sessions, assignment_map)
+    metrics = compute_metrics(
+        campus,
+        optimized_sessions,
+        ctx["group_sizes"],
+        energy_factor=ctx["energy_factor"],
+        operating_end_slot=ctx["end_slot"],
+        available_room_ids=ctx["available_rooms"],
+        removed_equipment=ctx.get("removed_equipment"),
+        teacher_limits=ctx.get("teacher_limits"),
+    )
+    audit = audit_solution(campus, optimized_sessions, ctx)
+    warnings: list[str] = []
+    if room_cap is not None:
+        warnings.append(
+            f"Balanced plan constrained to at most {room_cap} active rooms (midpoint of Plans B and C)."
+        )
+    if cap_fallback:
+        warnings.append("Balanced room cap was infeasible in this scenario; the cap was not applied.")
+    if solver_failed_audit:
+        warnings.append("The solver solution failed the independent hard-constraint audit; it is not presented as feasible.")
+    if source == "solver" and solver_status == "FEASIBLE":
+        warnings.append("Best feasible solution found within the time limit; optimality was not proven.")
+    if source == "constructive_fallback":
+        if solver_status in {"INFEASIBLE", "MODEL_INVALID"}:
+            warnings.append(
+                f"CP-SAT reported {solver_status}, but the constructive schedule passed all hard-constraint checks. "
+                "Review the solver model discrepancy before treating this as a solver result."
+            )
+        else:
+            warnings.append(
+                "CP-SAT did not finish within the time limit; this is a verified constructive schedule. "
+                "Optimality was not proven."
+            )
+        warnings.append("Plan source: constructive fallback, not a CP-SAT-confirmed schedule.")
+
+    status = "FEASIBLE" if audit["passed"] else "AUDIT_FAILED"
+    if source == "constructive_fallback" and audit["passed"]:
+        status = "FEASIBLE_HEURISTIC"
+    terms = {
+        "energy_kwh": metrics["energy_kwh"],
+        "active_room_utilization_pct": metrics["active_room_utilization_pct"],
+        "movement_km": metrics["movement_km"],
+        "peak_kw": metrics["peak_kw"],
+        "rooms_used": metrics["rooms_used"],
+        "seat_utilization_pct": metrics["seat_utilization_pct"],
+    }
+    return {
+        "label": spec.label,
+        "name": spec.name,
+        "strategy": spec.strategy,
+        "status": status,
+        "source": source,
+        "solver_status": solver_status,
+        "runtime_seconds": round(runtime, 2),
+        "objective": round(objective, 2) if objective is not None else None,
+        "assignments": assignments,
+        "metrics": {k: v for k, v in metrics.items() if k != "schedule"},
+        "schedule": metrics["schedule"],
+        "weights": plan_weights,
+        "audit": audit,
+        "warnings": warnings,
+        "objective_terms": terms,
+    }
+
+
+def _fallback_plan(
+    campus: Campus,
+    sessions: list[dict],
+    ctx: dict,
+    spec: PlanSpec,
+    plan_weights: dict,
+    hint: dict[str, tuple[str, int, int]] | None,
+    variables,
+    *,
+    solver_status: str,
+    runtime: float,
+    room_cap: int | None,
+    cap_fallback: bool,
+    solver_failed_audit: bool = False,
+) -> dict | None:
+    if not hint:
+        return None
+    plan = _make_plan(
+        campus,
+        sessions,
+        ctx,
+        spec,
+        plan_weights,
+        [
+            {"session_id": session_id, "room_id": room_id, "day": day, "start_slot": slot}
+            for session_id, (room_id, day, slot) in hint.items()
+        ],
+        source="constructive_fallback",
+        solver_status=solver_status,
+        runtime=runtime,
+        objective=_assignment_cost(variables, hint),
+        room_cap=room_cap,
+        cap_fallback=cap_fallback,
+        solver_failed_audit=solver_failed_audit,
+    )
+    if not plan["audit"]["passed"]:
+        return None
+    return plan
+
+
+def _empty_plan(
+    spec: PlanSpec,
+    plan_weights: dict,
+    *,
+    status: str,
+    solver_status: str,
+    runtime: float,
+    reason: str,
+) -> dict:
+    return {
+        "label": spec.label,
+        "name": spec.name,
+        "strategy": spec.strategy,
+        "status": status,
+        "source": "none",
+        "solver_status": solver_status,
+        "runtime_seconds": round(runtime, 2),
+        "objective": None,
+        "assignments": [],
+        "metrics": None,
+        "weights": plan_weights,
+        "audit": {
+            "passed": False,
+            "checks": [],
+            "violations": [reason],
+            "hard_constraint_count": 0,
+        },
+        "warnings": [reason],
+        "objective_terms": {},
+    }
+
+
 def _allowed_starts(campus: Campus, session: dict, course: dict, ctx: dict) -> list[int]:
     teacher = campus.teacher_index[course["teacher_id"]]
     starts: list[int] = []
     length = session["length"]
-    for day in range(5):
-        for slot in range(0, 7 - length + 1):
+    for day in range(catalog.TEACHING_DAYS):
+        for slot in range(0, catalog.SLOTS_PER_DAY - length + 1):
             if slot + length - 1 > ctx["end_slot"]:
                 continue
             if course.get("needs_lab") and ctx["lab_policy"] == "afternoon_only" and slot < 3:
                 continue
             if any(not teacher_available(teacher, day, slot + off) for off in range(length)):
                 continue
-            starts.append(day * 7 + slot)
+            starts.append(day * catalog.SLOTS_PER_DAY + slot)
     return starts
 
 
@@ -278,7 +458,12 @@ def _eligible_rooms(campus: Campus, course: dict, group_size: int, ctx: dict) ->
     for room in campus.rooms:
         if room["id"] not in ctx["available_rooms"]:
             continue
-        if allowed_rooms_for_course(course, room, group_size):
+        if allowed_rooms_for_course(
+            course,
+            room,
+            group_size,
+            removed_equipment=ctx.get("removed_equipment"),
+        ):
             rooms.append(room["id"])
     return rooms
 
@@ -286,7 +471,11 @@ def _eligible_rooms(campus: Campus, course: dict, group_size: int, ctx: dict) ->
 def _eligible_placements(campus: Campus, session: dict, course: dict, group_size: int, ctx: dict) -> list[tuple[str, int, int]]:
     starts = _allowed_starts(campus, session, course, ctx)
     rooms = _eligible_rooms(campus, course, group_size, ctx)
-    return [(rid, start // 7, start % 7) for rid in rooms for start in starts]
+    return [
+        (rid, start // catalog.SLOTS_PER_DAY, start % catalog.SLOTS_PER_DAY)
+        for rid in rooms
+        for start in starts
+    ]
 
 
 def _build_model(campus: Campus, sessions: list[dict], ctx: dict, weights: dict, room_cap: int | None = None):
@@ -457,7 +646,7 @@ def _assignment_cost(variables, assignment: dict[str, tuple[str, int, int]]) -> 
 
 def _apply_hint(model, variables, hint: dict[str, tuple[str, int, int]]) -> None:
     for session_id, (room_id, day, slot) in hint.items():
-        model.AddHint(variables["start"][session_id], day * 7 + slot)
+        model.AddHint(variables["start"][session_id], day * catalog.SLOTS_PER_DAY + slot)
         for rid in variables["eligible_rooms"][session_id]:
             model.AddHint(variables["room_choice"][(session_id, rid)], 1 if rid == room_id else 0)
 
@@ -475,21 +664,45 @@ def _extract_assignments(solver, variables, sessions: list[dict]) -> list[dict]:
             {
                 "session_id": session["id"],
                 "room_id": chosen,
-                "day": start // 7,
-                "start_slot": start % 7,
+                "day": start // catalog.SLOTS_PER_DAY,
+                "start_slot": start % catalog.SLOTS_PER_DAY,
             }
         )
     return assignments
 
 
 def _constructive_schedule(campus: Campus, sessions: list[dict], ctx: dict, weights: dict) -> dict | None:
+    """Try deterministic constructive orders until one places every session.
+
+    The constructive pass is a real fallback, not a mock: every returned
+    assignment is checked by ``audit_solution`` before it can become a plan.
+    """
+    for order_mode in ("constrained", "longest", "early"):
+        hint = _constructive_schedule_mode(campus, sessions, ctx, weights, order_mode)
+        if hint:
+            return hint
+    return None
+
+
+def _constructive_schedule_mode(
+    campus: Campus,
+    sessions: list[dict],
+    ctx: dict,
+    weights: dict,
+    order_mode: str,
+) -> dict | None:
     """Build a valid, objective-weighted seed timetable for CP-SAT."""
     placement_cache: dict[str, list[tuple[str, int, int]]] = {}
     for session in sessions:
         course = campus.course_index[session["course_id"]]
         group_size = ctx["group_sizes"][session["group_id"]]
         placement_cache[session["id"]] = _eligible_placements(campus, session, course, group_size, ctx)
-    order = sorted(sessions, key=lambda s: (len(placement_cache[s["id"]]), -s["length"], s["id"]))
+    if order_mode == "longest":
+        order = sorted(sessions, key=lambda s: (-s["length"], len(placement_cache[s["id"]]), s["id"]))
+    elif order_mode == "early":
+        order = sorted(sessions, key=lambda s: (s["length"], len(placement_cache[s["id"]]), s["id"]))
+    else:
+        order = sorted(sessions, key=lambda s: (len(placement_cache[s["id"]]), -s["length"], s["id"]))
     room_busy: set[tuple[str, int, int]] = set()
     teacher_busy: set[tuple[str, int, int]] = set()
     group_busy: set[tuple[str, int, int]] = set()
@@ -573,15 +786,17 @@ def _precheck(campus: Campus, sessions: list[dict], ctx: dict) -> list[dict]:
     for session in sessions:
         course = campus.course_index[session["course_id"]]
         load_by_teacher[course["teacher_id"]] += session["length"] * catalog.SLOT_HOURS
+    limits = ctx.get("teacher_limits", {})
     for tid, load in load_by_teacher.items():
         teacher = campus.teacher_index[tid]
-        if load > teacher["max_weekly_hours"] + 1e-6:
+        limit = int(limits.get(tid, teacher["max_weekly_hours"]))
+        if load > limit + 1e-6:
             diagnostics.append(
                 {
                     "constraint": "teacher_weekly_hours",
                     "teacher_id": tid,
                     "label": teacher["name"],
-                    "detail": f"Scheduled load {load:.1f}h exceeds the {teacher['max_weekly_hours']}h weekly limit.",
+                    "detail": f"Scheduled load {load:.1f}h exceeds the {limit}h weekly limit.",
                 }
             )
     return diagnostics[:40]
@@ -621,7 +836,12 @@ def audit_solution(campus: Campus, sessions: list[dict], ctx: dict) -> dict:
             groups[(session["group_id"], session["day"], t)].append(session["id"])
         if group_size > room["capacity"]:
             capacity_bad.append(session["id"])
-        if not allowed_rooms_for_course(course, room, group_size):
+        if not allowed_rooms_for_course(
+            course,
+            room,
+            group_size,
+            removed_equipment=ctx.get("removed_equipment"),
+        ):
             facility_bad.append(session["id"])
         teacher = campus.teacher_index[course["teacher_id"]]
         if any(
@@ -651,7 +871,12 @@ def audit_solution(campus: Campus, sessions: list[dict], ctx: dict) -> dict:
     add_check("No room double-booking", room_clash, f"{len(room_clash)} room slot(s) double-booked.")
     add_check("No instructor double-booking", teacher_clash, f"{len(teacher_clash)} instructor slot(s) double-booked.")
     add_check("No student-group double-booking", group_clash, f"{len(group_clash)} group slot(s) double-booked.")
-    overload = [t for t, load in load_by_teacher.items() if load > campus.teacher_index[t]["max_weekly_hours"] + 1e-6]
+    limits = ctx.get("teacher_limits", {})
+    overload = [
+        t
+        for t, load in load_by_teacher.items()
+        if load > int(limits.get(t, campus.teacher_index[t]["max_weekly_hours"])) + 1e-6
+    ]
     add_check("Weekly teaching limits upheld", overload, f"{len(overload)} instructor(s) exceed weekly limits.")
 
     return {

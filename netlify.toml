@@ -2,3 +2,15 @@
   base = "frontend"
   command = "npm run build"
   publish = "dist"
+
+# The app is a client-side router (React Router). Without this rewrite a direct
+# request to /campus, /simulation, /optimizer, ... returns Netlify's 404 page
+# instead of index.html, which looks like the site is broken.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# The FastAPI backend is not hosted on Netlify. Set VITE_API_BASE at build time
+# to the backend origin (for example https://<backend-host>) so the frontend
+# calls it directly; same-origin /api only works through the Vite dev proxy.

@@ -20,7 +20,9 @@ from .campus import load_campus
 from .db import SessionLocal
 from .models import AuditLog, Scenario, ScenarioPlan
 from .optimizer import InfeasibleScenario, PlanCancelled, solve_plans
+from .severity import assess_severity
 from .simulation import simulate
+from .state import scenario_state
 
 JOBS: dict[str, dict] = {}
 JOB_LOCK = threading.Lock()
@@ -59,6 +61,7 @@ def create_optimize_job(scenario_id: str, weights: dict, time_limit: float) -> d
             "time_limit": time_limit,
             "error": None,
             "diagnostics": [],
+            "warnings": [],
             "created_at": _now(),
             "started_at": None,
             "finished_at": None,
@@ -84,6 +87,7 @@ def public_job(job: dict) -> dict:
         "time_limit": job["time_limit"],
         "error": job["error"],
         "diagnostics": job["diagnostics"],
+        "warnings": job.get("warnings") or [],
         "created_at": job["created_at"],
         "started_at": job["started_at"],
         "finished_at": job["finished_at"],
@@ -139,6 +143,8 @@ def _should_cancel(job_id: str) -> bool:
 def _run_job(job_id: str) -> None:
     db = SessionLocal()
     scenario: Scenario | None = None
+    previous_status = "simulated"
+    previous_plan_count = 0
     try:
         job = get_job(job_id)
         if not job:
@@ -150,9 +156,13 @@ def _run_job(job_id: str) -> None:
             _update(job_id, status="failed", stage="failed", error="Scenario not found.", finished_at=_now())
             return
 
+        previous_status = scenario.status
+        previous_plan_count = len(scenario.plans or [])
         _update(job_id, status="running", stage="loading", started_at=_now(), message="Loading campus model and scenario constraints.")
+        # Keep the previous plan set visible and persisted until a replacement
+        # set has been generated successfully. This is an intentional atomic
+        # replace, not a destructive pre-clear.
         scenario.status = "optimizing"
-        db.execute(delete(ScenarioPlan).where(ScenarioPlan.scenario_id == scenario.id))
         db.commit()
 
         campus = load_campus(db)
@@ -173,17 +183,19 @@ def _run_job(job_id: str) -> None:
             raise PlanCancelled()
 
         feasible_count = 0
+        plan_rows: list[ScenarioPlan] = []
         for plan in result["plans"]:
             has_metrics = bool(plan.get("metrics"))
-            if plan.get("status") == "FEASIBLE" and has_metrics:
+            if plan.get("status") in {"FEASIBLE", "FEASIBLE_HEURISTIC"} and has_metrics:
                 feasible_count += 1
-            db.add(
+            plan_rows.append(
                 ScenarioPlan(
                     scenario_id=scenario.id,
                     label=plan["label"],
                     name=plan["name"],
                     strategy=plan["strategy"],
                     status=plan["status"],
+                    source=plan.get("source") or "solver",
                     solver_status=plan["solver_status"],
                     objective=plan.get("objective"),
                     metrics=plan.get("metrics") or {},
@@ -196,8 +208,30 @@ def _run_job(job_id: str) -> None:
                     runtime_seconds=plan.get("runtime_seconds") or 0,
                 )
             )
-        scenario.status = "optimized" if feasible_count else "infeasible"
+        # Replace the previous plan set only after all new rows have been built.
+        db.execute(delete(ScenarioPlan).where(ScenarioPlan.scenario_id == scenario.id))
+        for plan_row in plan_rows:
+            db.add(plan_row)
+        if feasible_count:
+            scenario.status = "optimized"
+        elif previous_plan_count:
+            scenario.status = previous_status
+        elif any(plan.status == "UNKNOWN" for plan in plan_rows):
+            scenario.status = "timeout"
+        else:
+            scenario.status = "infeasible"
         diagnostics = dict(scenario.diagnostics or {})
+        fallback_count = sum(1 for plan in result["plans"] if plan.get("source") == "constructive_fallback")
+        job_warnings = [
+            warning
+            for plan in result["plans"]
+            for warning in (plan.get("warnings") or [])
+            if plan.get("source") == "constructive_fallback"
+        ]
+        if not feasible_count:
+            job_warnings.append(
+                "No solver-confirmed plan was produced. Check the time limit and the per-plan statuses; no plan is labelled feasible without an independent audit."
+            )
         diagnostics.update(
             {
                 "optimization": {
@@ -205,6 +239,7 @@ def _run_job(job_id: str) -> None:
                     "time_limit": time_limit,
                     "solver_status": "COMPLETED",
                     "feasible_plans": feasible_count,
+                    "fallback_plans": fallback_count,
                     "session_count": result["session_count"],
                     "seed": 42,
                     "generated_at": _now(),
@@ -220,6 +255,7 @@ def _run_job(job_id: str) -> None:
                     "weights": result["weights"],
                     "time_limit": time_limit,
                     "feasible_plans": feasible_count,
+                    "fallback_plans": fallback_count,
                     "solver_seed": 42,
                 },
             )
@@ -230,18 +266,21 @@ def _run_job(job_id: str) -> None:
             status="completed",
             stage="completed",
             plans_done=feasible_count,
-            message=f"Optimization complete · {feasible_count} feasible plan(s) generated.",
+            message=(
+                f"Optimization complete · {feasible_count} usable plan(s) generated"
+                + (f" · {fallback_count} verified heuristic plan(s)" if fallback_count else "")
+                + "."
+            ),
+            warnings=job_warnings,
             finished_at=_now(),
-            result={"scenario_id": scenario.id, "feasible_plans": feasible_count},
+            result={"scenario_id": scenario.id, "feasible_plans": feasible_count, "fallback_plans": fallback_count},
         )
     except PlanCancelled:
         db.rollback()
         try:
             if scenario is not None:
-                db.execute(delete(ScenarioPlan).where(ScenarioPlan.scenario_id == scenario.id))
-                scenario.status = "simulated"
-                db.commit()
-                db.add(AuditLog(action="OPTIMIZATION_CANCELLED", scenario_id=scenario.id, detail={}))
+                scenario.status = previous_status if previous_plan_count else "simulated"
+                db.add(AuditLog(action="OPTIMIZATION_CANCELLED", scenario_id=scenario.id, detail={"plans_preserved": previous_plan_count}))
                 db.commit()
         except Exception:
             db.rollback()
@@ -249,16 +288,21 @@ def _run_job(job_id: str) -> None:
             job_id,
             status="cancelled",
             stage="cancelled",
-            message="Optimization cancelled. No plans were saved.",
+            message=(
+                "Optimization cancelled. Previously saved plans were kept."
+                if previous_plan_count
+                else "Optimization cancelled. No plans were saved."
+            ),
             finished_at=_now(),
         )
     except InfeasibleScenario as exc:
         db.rollback()
         try:
             if scenario is not None:
-                scenario.status = "infeasible"
+                scenario.status = previous_status if previous_plan_count else "infeasible"
                 diagnostics = dict(scenario.diagnostics or {})
                 diagnostics["infeasibility"] = exc.diagnostics
+                diagnostics["last_optimization_error"] = str(exc)
                 scenario.diagnostics = diagnostics
                 db.add(AuditLog(action="OPTIMIZATION_INFEASIBLE", scenario_id=scenario.id, detail={"diagnostics": exc.diagnostics}))
                 db.commit()
@@ -270,7 +314,11 @@ def _run_job(job_id: str) -> None:
             stage="infeasible",
             error=str(exc),
             diagnostics=exc.diagnostics,
-            message="No feasible timetable satisfies the current hard constraints.",
+            message=(
+                "No feasible timetable satisfies the current hard constraints. Previously saved plans were kept."
+                if previous_plan_count
+                else "No feasible timetable satisfies the current hard constraints."
+            ),
             finished_at=_now(),
         )
     except Exception as exc:  # pragma: no cover - defensive boundary
@@ -278,8 +326,10 @@ def _run_job(job_id: str) -> None:
         traceback.print_exc()
         try:
             if scenario is not None:
-                scenario.status = "failed"
-                db.commit()
+                scenario.status = previous_status if previous_plan_count else "failed"
+                diagnostics = dict(scenario.diagnostics or {})
+                diagnostics["last_optimization_error"] = str(exc)[:300]
+                scenario.diagnostics = diagnostics
                 db.add(AuditLog(action="OPTIMIZATION_FAILED", scenario_id=scenario.id, detail={"error": str(exc)[:300]}))
                 db.commit()
         except Exception:
@@ -289,7 +339,7 @@ def _run_job(job_id: str) -> None:
             status="failed",
             stage="failed",
             error="The optimization run failed. The scenario configuration has been preserved.",
-            message="Optimization failed.",
+            message="Optimization failed. Previously saved plans were kept." if previous_plan_count else "Optimization failed.",
             finished_at=_now(),
         )
     finally:
@@ -347,6 +397,9 @@ def seed_demo_scenarios(db) -> None:
 def simulate_mode(db, name: str, kind: str, params: dict) -> Scenario:
     campus = load_campus(db)
     result = simulate(campus, params, name=name, kind=kind)
+    diagnostics = dict(result["diagnostics"])
+    diagnostics["state"] = scenario_state(campus, params)
+    diagnostics["severity"] = assess_severity(campus, params)
     scenario = Scenario(
         name=name,
         kind=kind,
@@ -357,6 +410,6 @@ def simulate_mode(db, name: str, kind: str, params: dict) -> Scenario:
         affected=result["affected"],
         warnings=result["warnings"],
         assumptions=result["assumptions"],
-        diagnostics=result["diagnostics"],
+        diagnostics=diagnostics,
     )
     return scenario

@@ -7,6 +7,7 @@ conflicts are all derived from the resulting timetable.
 
 from __future__ import annotations
 
+import math
 from collections import defaultdict
 
 from . import catalog
@@ -21,14 +22,32 @@ VALID_LAB_POLICIES = {"default", "afternoon_only"}
 VALID_ENERGY_MODES = {"standard", "efficiency"}
 
 
+def effective_unavailable_room_ids(campus: Campus, params: dict) -> set[str]:
+    """Expand room, building and laboratory-availability rules deterministically."""
+    unavailable = set(params.get("unavailable_room_ids", []))
+    for building_id in params.get("unavailable_building_ids", []):
+        unavailable.update(
+            room["id"] for room in campus.rooms if str(room["building_id"]) == str(building_id)
+        )
+    pct = int(params.get("lab_availability_pct", 100))
+    labs = sorted((room for room in campus.rooms if room.get("kind") == "lab"), key=lambda room: room["id"])
+    keep = math.ceil(len(labs) * max(0, min(100, pct)) / 100)
+    unavailable.update(room["id"] for room in labs[keep:])
+    return unavailable
+
+
 def validate_params(campus: Campus, params: dict) -> list[str]:
     errors: list[str] = []
     rooms = set(campus.room_index)
     teachers = set(campus.teacher_index)
+    buildings = set(campus.building_index)
     unknown_rooms = [rid for rid in params.get("unavailable_room_ids", []) if rid not in rooms]
+    unknown_buildings = [bid for bid in params.get("unavailable_building_ids", []) if bid not in buildings]
     unknown_teachers = [tid for tid in params.get("unavailable_teacher_ids", []) if tid not in teachers]
     if unknown_rooms:
         errors.append(f"Unknown room ids: {', '.join(unknown_rooms)}.")
+    if unknown_buildings:
+        errors.append(f"Unknown building ids: {', '.join(unknown_buildings)}.")
     if unknown_teachers:
         errors.append(f"Unknown teacher ids: {', '.join(unknown_teachers)}.")
     delta = params.get("enrollment_delta", 0)
@@ -39,19 +58,32 @@ def validate_params(campus: Campus, params: dict) -> list[str]:
     if params.get("energy_mode", "standard") not in VALID_ENERGY_MODES:
         errors.append("Energy mode must be 'standard' or 'efficiency'.")
     end_slot = params.get("operating_end_slot", 6)
-    if not isinstance(end_slot, int) or end_slot < 3 or end_slot > 6:
-        errors.append("Operating end slot must be between 3 (14:30) and 6 (19:30).")
-    if len(params.get("unavailable_room_ids", [])) == len(campus.rooms):
+    if not isinstance(end_slot, int) or end_slot < 3 or end_slot >= len(catalog.TIME_SLOTS):
+        errors.append(
+            f"Operating end slot must be between 3 and {len(catalog.TIME_SLOTS) - 1}."
+        )
+    lab_pct = params.get("lab_availability_pct", 100)
+    if not isinstance(lab_pct, int) or lab_pct < 0 or lab_pct > 100:
+        errors.append("Laboratory availability must be an integer percentage between 0 and 100.")
+    workload_delta = params.get("teacher_workload_delta", 0)
+    if not isinstance(workload_delta, int) or workload_delta < -10 or workload_delta > 10:
+        errors.append("Teacher workload delta must be an integer between -10 and +10 hours.")
+    if effective_unavailable_room_ids(campus, params) >= rooms:
         errors.append("At least one room must remain available.")
     return errors
 
 
 def build_context(campus: Campus, params: dict) -> dict:
     group_sizes = group_sizes_with_delta(campus.groups, params.get("enrollment_delta", 0))
-    unavailable_rooms = set(params.get("unavailable_room_ids", []))
+    unavailable_rooms = effective_unavailable_room_ids(campus, params)
     unavailable_teachers = set(params.get("unavailable_teacher_ids", []))
     end_slot = int(params.get("operating_end_slot", 6))
     available_rooms = {r["id"] for r in campus.rooms if r["id"] not in unavailable_rooms}
+    workload_delta = int(params.get("teacher_workload_delta", 0))
+    teacher_limits = {
+        teacher["id"]: max(1, int(teacher["max_weekly_hours"]) + workload_delta)
+        for teacher in campus.teachers
+    }
     return {
         "group_sizes": group_sizes,
         "unavailable_rooms": unavailable_rooms,
@@ -61,6 +93,10 @@ def build_context(campus: Campus, params: dict) -> dict:
         "lab_policy": params.get("lab_policy", "default"),
         "energy_mode": params.get("energy_mode", "standard"),
         "energy_factor": ENERGY_FACTOR.get(params.get("energy_mode", "standard"), 1.0),
+        "removed_equipment": set(params.get("equipment_loss", [])),
+        "teacher_limits": teacher_limits,
+        "lab_availability_pct": int(params.get("lab_availability_pct", 100)),
+        "unavailable_building_ids": list(params.get("unavailable_building_ids", [])),
     }
 
 
@@ -138,6 +174,8 @@ def simulate(campus: Campus, params: dict, *, name: str, kind: str | None = None
         energy_factor=ctx["energy_factor"],
         operating_end_slot=ctx["end_slot"],
         available_room_ids=ctx["available_rooms"],
+        removed_equipment=ctx["removed_equipment"],
+        teacher_limits=ctx["teacher_limits"],
     )
     affected = build_affected(campus, sessions, metrics, ctx)
     warnings = _warnings(metrics)
@@ -161,6 +199,10 @@ def simulate(campus: Campus, params: dict, *, name: str, kind: str | None = None
                 "available_rooms": sorted(ctx["available_rooms"]),
                 "end_slot": ctx["end_slot"],
                 "energy_factor": ctx["energy_factor"],
+                "removed_equipment": sorted(ctx["removed_equipment"]),
+                "teacher_limits": ctx["teacher_limits"],
+                "lab_availability_pct": ctx["lab_availability_pct"],
+                "unavailable_building_ids": ctx["unavailable_building_ids"],
             },
         },
     }
@@ -169,8 +211,16 @@ def simulate(campus: Campus, params: dict, *, name: str, kind: str | None = None
 def infer_kind(params: dict) -> str:
     if params.get("enrollment_delta"):
         return "demand"
-    if params.get("unavailable_room_ids") or params.get("unavailable_teacher_ids"):
+    if (
+        params.get("unavailable_room_ids")
+        or params.get("unavailable_building_ids")
+        or params.get("unavailable_teacher_ids")
+        or params.get("equipment_loss")
+        or params.get("lab_availability_pct", 100) != 100
+    ):
         return "facility"
+    if params.get("teacher_workload_delta"):
+        return "policy"
     if params.get("lab_policy") != "default" or params.get("operating_end_slot", 6) != 6:
         return "policy"
     if params.get("energy_mode") != "standard":
@@ -366,6 +416,22 @@ def _assumptions(campus: Campus, ctx: dict, params: dict) -> list[str]:
     if ctx["unavailable_rooms"]:
         assumptions.append(
             f"{len(ctx['unavailable_rooms'])} room(s) are removed from both capacity and availability for this scenario."
+        )
+    if ctx["unavailable_building_ids"]:
+        assumptions.append(
+            f"Building closure expands to every room in {', '.join(ctx['unavailable_building_ids'])}."
+        )
+    if ctx["lab_availability_pct"] != 100:
+        assumptions.append(
+            f"Laboratory availability is set to {ctx['lab_availability_pct']}% of labs; the remaining labs are selected deterministically by room id."
+        )
+    if ctx["removed_equipment"]:
+        assumptions.append(
+            f"Equipment tags removed for this scenario: {', '.join(sorted(ctx['removed_equipment']))}."
+        )
+    if any(limit != campus.teacher_index[tid]["max_weekly_hours"] for tid, limit in ctx["teacher_limits"].items()):
+        assumptions.append(
+            "The teacher workload delta applies to every instructor's declared weekly limit in this scenario."
         )
     if ctx["end_slot"] != 6:
         assumptions.append(

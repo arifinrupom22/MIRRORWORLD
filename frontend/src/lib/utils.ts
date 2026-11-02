@@ -75,8 +75,10 @@ export const STATUS_TONE: Record<string, Severity | 'neutral'> = {
   completed: 'positive',
   cancelled: 'neutral',
   infeasible: 'critical',
+  timeout: 'warning',
   failed: 'critical',
   FEASIBLE: 'positive',
+  FEASIBLE_HEURISTIC: 'warning',
   OPTIMAL: 'positive',
   INFEASIBLE: 'critical',
   UNKNOWN: 'warning',
@@ -89,6 +91,8 @@ export function statusTone(status: string): Severity | 'neutral' {
 
 export function statusLabel(status: string): string {
   if (!status) return 'Unknown'
+  if (status === 'FEASIBLE_HEURISTIC') return 'Verified heuristic'
+  if (status === 'timeout') return 'Solver timeout'
   return status
     .replace(/_/g, ' ')
     .toLowerCase()

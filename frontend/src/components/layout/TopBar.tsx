@@ -1,4 +1,4 @@
-import { AlertTriangle, Bell, Menu, Moon, Plus, Search, ShieldAlert, Sun } from 'lucide-react'
+import { AlertTriangle, Bell, Compass, Menu, Moon, Plus, Search, ShieldAlert, Sun } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { routeMeta } from '../../config/nav'
@@ -11,7 +11,8 @@ export function TopBar() {
   const location = useLocation()
   const navigate = useNavigate()
   const meta = routeMeta(location.pathname)
-  const { setMobileNavOpen, setCommandOpen, notificationsOpen, setNotificationsOpen, clearActiveScenario } = useAppStore()
+  const { setMobileNavOpen, setCommandOpen, notificationsOpen, setNotificationsOpen, clearActiveScenario, setTourOpen } =
+    useAppStore()
   const overview = useOverview()
   const alerts = overview.data?.alerts ?? []
   const [utc, setUtc] = useState(() => new Date())
@@ -47,7 +48,8 @@ export function TopBar() {
 
   const openAlert = (action: string) => {
     setNotificationsOpen(false)
-    if (action === 'campus') navigate('/model')
+    if (action === '/optimizer' || action === 'optimize') navigate('/optimizer')
+    else if (action === '/campus' || action === '/model' || action === 'campus') navigate('/model')
     else navigate('/simulation')
   }
 
@@ -102,6 +104,10 @@ export function TopBar() {
           </div>
         </div>
 
+        <IconButton label="Start guided tour" variant="ghost" onClick={() => setTourOpen(true)}>
+          <Compass className="h-3.5 w-3.5" />
+        </IconButton>
+
         <button
           type="button"
           onClick={toggleTheme}
@@ -147,10 +153,10 @@ export function TopBar() {
                     <button
                       key={alert.id}
                       type="button"
-                      onClick={() => openAlert(alert.action)}
+                      onClick={() => openAlert(alert.suggested_action?.route ?? alert.action)}
                       className="flex w-full items-start gap-2.5 border-b border-lineSoft px-3.5 py-2.5 text-left last:border-b-0 hover:bg-subtleHover"
                     >
-                      <AlertTriangle className={cn('mt-0.5 h-3.5 w-3.5 shrink-0', alert.severity === 'critical' ? 'text-critical' : 'text-warning')} />
+                      <AlertTriangle className={cn('mt-0.5 h-3.5 w-3.5 shrink-0', alert.severity === 'critical' ? 'text-critical' : alert.severity === 'high' ? 'text-warning' : alert.severity === 'medium' ? 'text-warning/80' : 'text-cyan')} />
                       <span className="min-w-0">
                         <span className="flex items-center gap-2">
                           <span className="font-mono text-[7.5px] uppercase tracking-[0.1em] text-faint">{alert.category}</span>

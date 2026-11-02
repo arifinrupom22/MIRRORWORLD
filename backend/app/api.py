@@ -1,19 +1,23 @@
 from __future__ import annotations
 
 import hashlib
+import time
+import uuid
 import json
 from collections import defaultdict
 from datetime import datetime, timezone
 from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from fastapi.responses import HTMLResponse, Response
+from fastapi.responses import HTMLResponse, Response, StreamingResponse
 from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session as OrmSession
 
-from . import catalog, exports, graph as graph_service
+from . import ai as ai_service, ai_context, ai_modes, ai_registry, ai_tools, catalog, exports, graph as graph_service
+from .alerts import alert_counts, build_alerts
 from .campus import Campus, load_campus
 from .db import get_db
+from .difference import diff_states, legacy_difference
 from .explain import build_explanation, comparison_rows, recommend_plan
 from .jobs import (
     JOBS,
@@ -25,9 +29,25 @@ from .jobs import (
     simulate_mode,
 )
 from .models import AuditLog, Building, Course, GroupCourse, Room, Scenario, ScenarioPlan, StudentGroup, Teacher, TimetableSession
+from .movement import compute_movement
 from .optimizer import _precheck, _allowed_starts, _eligible_rooms
-from .schemas import GroupUpdate, OptimizeRequest, RoomUpdate, ScenarioCreate, TeacherUpdate
+from .recommendations import build_recommendations
+from .schemas import (
+    AIApplyRequest,
+    AIChatRequest,
+    AIProposalRequest,
+    AssessRequest,
+    GroupUpdate,
+    MovementResponse,
+    OptimizeRequest,
+    RoomUpdate,
+    ScenarioCreate,
+    TeacherUpdate,
+)
+from .severity import assess_severity
+from .templates import build_templates
 from .simulation import build_context, infer_kind, simulate, validate_params
+from .state import scenario_state
 
 router = APIRouter(prefix="/api")
 
@@ -93,9 +113,11 @@ def _scenario_summary(scenario: Scenario) -> dict:
         "created_at": _now_iso(scenario.created_at),
         "updated_at": _now_iso(scenario.updated_at),
         "plan_count": len(plans),
-        "feasible_plans": sum(1 for p in plans if p.status == "FEASIBLE"),
+        "feasible_plans": sum(1 for p in plans if p.status in {"FEASIBLE", "FEASIBLE_HEURISTIC"}),
+        "fallback_plans": sum(1 for p in plans if p.status == "FEASIBLE_HEURISTIC"),
         "plan_labels": [p.label for p in plans],
         "headline": _scenario_headline(scenario),
+        "severity": (scenario.diagnostics or {}).get("severity"),
     }
 
 
@@ -105,6 +127,8 @@ def _scenario_headline(scenario: Scenario) -> str:
         return "Optimization running"
     if scenario.status == "infeasible":
         return "No feasible recovery found"
+    if scenario.status == "timeout":
+        return "Solver timed out — no confirmed plan"
     if scenario.status == "failed":
         return "Run failed — configuration preserved"
     if metrics.get("unassigned_sessions"):
@@ -122,6 +146,7 @@ def _plan_dict(plan: ScenarioPlan, include_schedule: bool = True) -> dict:
         "name": plan.name,
         "strategy": plan.strategy,
         "status": plan.status,
+        "source": getattr(plan, "source", "solver") or "solver",
         "solver_status": plan.solver_status,
         "objective": plan.objective,
         "metrics": plan.metrics,
@@ -138,7 +163,12 @@ def _plan_dict(plan: ScenarioPlan, include_schedule: bool = True) -> dict:
     return data
 
 
-def _scenario_detail(scenario: Scenario, baseline_metrics: dict | None = None, include_plans: bool = True) -> dict:
+def _scenario_detail(
+    scenario: Scenario,
+    baseline_metrics: dict | None = None,
+    include_plans: bool = True,
+    difference: dict | None = None,
+) -> dict:
     data = _scenario_summary(scenario)
     data.update(
         {
@@ -147,6 +177,7 @@ def _scenario_detail(scenario: Scenario, baseline_metrics: dict | None = None, i
             "warnings": scenario.warnings,
             "assumptions": scenario.assumptions,
             "diagnostics": scenario.diagnostics,
+            "difference": difference,
         }
     )
     if include_plans:
@@ -157,6 +188,28 @@ def _scenario_detail(scenario: Scenario, baseline_metrics: dict | None = None, i
     if job:
         data["job"] = job
     return data
+
+
+def _difference_for(scenario: Scenario, campus: Campus, baseline_metrics: dict | None = None) -> dict:
+    stored = ((scenario.diagnostics or {}).get("state"))
+    baseline = _stored_baseline(scenario, {k: v for k, v in (baseline_metrics or {}).items() if k != "schedule"})
+    if isinstance(stored, dict) and isinstance(stored.get("baseline"), dict) and isinstance(stored.get("effective"), dict):
+        return diff_states(
+            stored["baseline"],
+            stored["effective"],
+            scenario_id=scenario.id,
+            scenario_name=scenario.name,
+            affected=scenario.affected,
+            metrics=scenario.metrics,
+            baseline_metrics=baseline,
+        )
+    return legacy_difference(
+        campus,
+        scenario,
+        affected=scenario.affected,
+        metrics=scenario.metrics,
+        baseline_metrics=baseline,
+    )
 
 
 def _stored_baseline(scenario: Scenario, fallback: dict) -> dict:
@@ -289,7 +342,7 @@ def overview(db: OrmSession = Depends(get_db)):
         rooms = rooms_by_building[building["id"]]
         sessions = sessions_by_building[building["id"]]
         occupied = sum((s.get("length") or 1) * 1.5 for s in sessions)
-        available = len(rooms) * 5 * (metrics.get("operating_end_slot", 6) + 1) * 1.5
+        available = len(rooms) * catalog.TEACHING_DAYS * (metrics.get("operating_end_slot", 6) + 1) * catalog.SLOT_HOURS
         building_rows.append(
             {
                 **building,
@@ -352,70 +405,8 @@ def overview(db: OrmSession = Depends(get_db)):
     busy_rooms = {s.get("room_id") for s in snapshot_entries if s.get("room_id")}
     available_rooms = [r for r in campus.rooms if r["id"] not in busy_rooms]
 
-    alerts = []
-    for detail in metrics.get("capacity_details", []):
-        alerts.append(
-            {
-                "id": f"capacity:{detail['session_id']}",
-                "severity": "critical",
-                "category": "Capacity",
-                "title": f"Capacity exceeded · {detail['label']}",
-                "detail": f"{detail['group_size']} students in a {detail['capacity']}-seat room ({detail['room_code']}), deficit {detail['violation']}.",
-                "slot": detail.get("slot_label"),
-                "action": "optimize",
-            }
-        )
-    for conflict in metrics.get("conflict_details", []):
-        labels = " × ".join(s["label"] for s in conflict.get("sessions", []))
-        alerts.append(
-            {
-                "id": f"conflict:{conflict['type']}:{conflict['resource']}:{conflict['slot_label']}",
-                "severity": "critical",
-                "category": f"{conflict['type'].title()} conflict",
-                "title": f"{conflict['resource']} double-booked",
-                "detail": f"{labels} at {conflict['slot_label']}.",
-                "slot": conflict.get("slot_label"),
-                "action": "optimize",
-            }
-        )
-    for detail in metrics.get("facility_details", []):
-        alerts.append(
-            {
-                "id": f"facility:{detail['session_id']}",
-                "severity": "warning",
-                "category": "Facility",
-                "title": f"Facility mismatch · {detail['label']}",
-                "detail": detail.get("reason"),
-                "slot": detail.get("slot_label"),
-                "action": "campus",
-            }
-        )
-    for detail in metrics.get("availability_details", []):
-        alerts.append(
-            {
-                "id": f"availability:{detail['session_id']}:{detail['slot_label']}",
-                "severity": "warning",
-                "category": "Instructor",
-                "title": f"Availability conflict · {detail['teacher_name']}",
-                "detail": f"{detail['label']} is scheduled at {detail['slot_label']} outside the instructor's availability.",
-                "slot": detail.get("slot_label"),
-                "action": "optimize",
-            }
-        )
-    for load in metrics.get("teacher_overloads", []):
-        alerts.append(
-            {
-                "id": f"overload:{load['teacher_id']}",
-                "severity": "warning",
-                "category": "Workload",
-                "title": f"Weekly limit exceeded · {load['teacher_name']}",
-                "detail": f"{load['load_hours']}h assigned against a {load['limit_hours']}h limit.",
-                "slot": None,
-                "action": "campus",
-            }
-        )
-    severity_rank = {"critical": 0, "warning": 1, "info": 2}
-    alerts.sort(key=lambda a: severity_rank.get(a["severity"], 3))
+    alerts = build_alerts(campus, metrics, schedule)
+    recommendations = build_recommendations(campus, metrics, schedule)
 
     recent = db.scalars(select(Scenario).order_by(Scenario.created_at.desc()).limit(5)).all()
     recent_rows = [_scenario_summary(s) for s in recent]
@@ -435,7 +426,9 @@ def overview(db: OrmSession = Depends(get_db)):
             "available_room_codes": [r["code"] for r in available_rooms],
             "busy_room_codes": sorted({r["code"] for r in campus.rooms if r["id"] in busy_rooms}),
         },
-        "alerts": alerts[:10],
+        "alerts": alerts,
+        "alert_counts": alert_counts(alerts),
+        "recommendations": recommendations,
         "recent_scenarios": recent_rows,
         "activity": [
             {
@@ -458,7 +451,521 @@ def overview(db: OrmSession = Depends(get_db)):
 
 
 # ---------------------------------------------------------------------------
-# Scenarios and optimization
+# Alerts, recommendations, severity and templates
+# ---------------------------------------------------------------------------
+
+
+@router.get("/alerts")
+def get_alerts(scenario_id: str | None = Query(None), db: OrmSession = Depends(get_db)):
+    if scenario_id:
+        scenario = db.get(Scenario, scenario_id)
+        if scenario is None:
+            raise HTTPException(404, "Scenario not found.")
+        campus = load_campus(db)
+        alerts = build_alerts(
+            campus,
+            scenario.metrics or {},
+            scenario.schedule or [],
+            scenario={"id": scenario.id, "name": scenario.name, "affected": scenario.affected or {}},
+        )
+        return {"alerts": alerts, "counts": alert_counts(alerts), "source": "scenario", "scenario_id": scenario.id}
+    campus, metrics, schedule = _baseline(db)
+    alerts = build_alerts(campus, metrics, schedule)
+    return {"alerts": alerts, "counts": alert_counts(alerts), "source": "baseline", "scenario_id": None}
+
+
+@router.get("/recommendations")
+def get_recommendations(scenario_id: str | None = Query(None), db: OrmSession = Depends(get_db)):
+    if scenario_id:
+        scenario = db.get(Scenario, scenario_id)
+        if scenario is None:
+            raise HTTPException(404, "Scenario not found.")
+        campus = load_campus(db)
+        recommendations = build_recommendations(campus, scenario.metrics or {}, scenario.schedule or [])
+        return {"recommendations": recommendations, "count": len(recommendations), "source": "scenario"}
+    campus, metrics, schedule = _baseline(db)
+    recommendations = build_recommendations(campus, metrics, schedule)
+    return {"recommendations": recommendations, "count": len(recommendations), "source": "baseline"}
+
+
+@router.post("/assess")
+def assess_scenario(body: AssessRequest, db: OrmSession = Depends(get_db)):
+    campus = load_campus(db)
+    params = body.params.model_dump()
+    errors = validate_params(campus, params)
+    if errors:
+        raise HTTPException(422, " ".join(errors))
+    return {"assessment": assess_severity(campus, params)}
+
+
+@router.get("/templates")
+def list_templates(db: OrmSession = Depends(get_db)):
+    campus = load_campus(db)
+    templates = build_templates(campus)
+    return {"templates": templates, "count": len(templates)}
+
+
+@router.get("/movement", response_model=MovementResponse)
+def get_movement(
+    scenario_id: str | None = Query(None),
+    day: int | None = Query(None, ge=0, lt=len(catalog.DAYS)),
+    slot: int | None = Query(None, ge=0, lt=len(catalog.TIME_SLOTS)),
+    db: OrmSession = Depends(get_db),
+):
+    if scenario_id:
+        scenario = db.get(Scenario, scenario_id)
+        if scenario is None:
+            raise HTTPException(404, "Scenario not found.")
+        campus = load_campus(db)
+        params = scenario.params or {}
+    else:
+        campus = load_campus(db)
+        params = {}
+    return compute_movement(
+        campus=campus,
+        params=params,
+        day=day,
+        slot=slot,
+        scenario_id=scenario_id,
+    )
+
+
+@router.get("/scenarios/{scenario_id}/movement", response_model=MovementResponse)
+def get_scenario_movement(
+    scenario_id: str,
+    day: int | None = Query(None, ge=0, lt=len(catalog.DAYS)),
+    slot: int | None = Query(None, ge=0, lt=len(catalog.TIME_SLOTS)),
+    db: OrmSession = Depends(get_db),
+):
+    return get_movement(scenario_id=scenario_id, day=day, slot=slot, db=db)
+
+
+
+
+# ---------------------------------------------------------------------------
+# Mirror AI — grounded decision assistant
+# ---------------------------------------------------------------------------
+#
+# The assistant never computes campus numbers. This module assembles a context
+# from the same deterministic services the UI uses (campus model, simulation
+# metrics, alerts, recommendations, difference engine, movement engine) and
+# hands it to the provider layer in `ai.py`, which either asks the configured
+# model or answers with the rule engine. Nothing here reads an API key into a
+# response body or the frontend.
+
+
+def _ai_buildings(campus: Campus) -> list[dict]:
+    rooms_by_building: dict[str, list[dict]] = defaultdict(list)
+    for room in campus.rooms:
+        rooms_by_building[room["building_id"]].append(room)
+    return [
+        {
+            "code": building["code"],
+            "name": building["name"],
+            "zone": building["zone"],
+            "purpose": building["purpose"],
+            "floors": building["floors"],
+            "rooms": len(rooms_by_building[building["id"]]),
+            "labs": sum(1 for room in rooms_by_building[building["id"]] if room["kind"] == "lab"),
+            "seats": sum(room["capacity"] for room in rooms_by_building[building["id"]]),
+        }
+        for building in campus.buildings
+    ]
+
+
+def _ai_alert_digest(campus: Campus, metrics: dict, schedule: list[dict], limit: int = 8, scenario: dict | None = None) -> list[dict]:
+    alerts = build_alerts(campus, metrics or {}, schedule or [], scenario=scenario)
+    return [
+        {
+            "severity": alert.get("severity"),
+            "category": alert.get("category"),
+            "title": alert.get("title"),
+            "description": alert.get("description"),
+            "consequences": alert.get("consequences"),
+            "suggested_action": (alert.get("suggested_action") or {}).get("text"),
+            "slot": alert.get("slot"),
+        }
+        for alert in alerts[:limit]
+    ]
+
+
+def _ai_context(db: OrmSession, scenario_id: str | None) -> dict:
+    campus, baseline_metrics, baseline_schedule = _baseline(db)
+    scenario = None
+    if scenario_id:
+        scenario = db.get(Scenario, scenario_id)
+        if scenario is None:
+            raise HTTPException(404, "Scenario not found.")
+
+    params = (scenario.params or {}) if scenario else {}
+    metrics = (scenario.metrics or {}) if scenario else baseline_metrics
+    schedule = (scenario.schedule or []) if scenario else baseline_schedule
+
+    summary = {
+        "buildings": len(campus.buildings),
+        "rooms": len(campus.rooms),
+        "classrooms": sum(1 for room in campus.rooms if room["kind"] == "classroom"),
+        "labs": sum(1 for room in campus.rooms if room["kind"] == "lab"),
+        "teachers": len(campus.teachers),
+        "groups": len(campus.groups),
+        "courses": len(campus.courses),
+        "sessions": len(campus.sessions),
+        "students": sum(int(group.get("size") or 0) for group in campus.groups),
+        "seat_capacity": sum(int(room.get("capacity") or 0) for room in campus.rooms),
+    }
+
+    context: dict = {
+        "campus": {
+            "name": catalog.CAMPUS_NAME,
+            "dataset": catalog.DATASET_LABEL,
+            "data_note": "Synthetic demo dataset. Geometry and labels are illustrative, not surveyed.",
+            "summary": summary,
+            "buildings": _ai_buildings(campus),
+            "days": [day["label"] for day in catalog.DAYS],
+            "time_slots": [slot["label"] for slot in catalog.TIME_SLOTS],
+            "walking_speed_m_per_min": 84,
+        },
+        "baseline": {
+            key: baseline_metrics.get(key)
+            for key in (
+                "sessions_total",
+                "sessions_scheduled",
+                "unassigned_sessions",
+                "conflicts_total",
+                "conflicts_by_type",
+                "capacity_violations_count",
+                "capacity_violations_total",
+                "facility_mismatch_count",
+                "availability_violation_count",
+                "energy_kwh",
+                "peak_kw",
+                "room_utilization_pct",
+                "seat_utilization_pct",
+                "hard_issue_count",
+            )
+        },
+        "alerts": _ai_alert_digest(
+            campus,
+            metrics,
+            schedule,
+            scenario={"id": scenario.id, "name": scenario.name, "affected": scenario.affected or {}} if scenario else None,
+        ),
+        "recommendations": [
+            {
+                "id": item.get("id"),
+                "title": item.get("title") or item.get("label"),
+                "detail": item.get("detail") or item.get("description") or item.get("rationale"),
+            }
+            for item in build_recommendations(campus, metrics or {}, schedule or [])[:6]
+        ],
+        "movement": ai_context.movement_insight(campus, params),
+        "movement_note": "Timetable-derived estimate; not live tracking.",
+        "knowledge": ai_context.knowledge_digest(campus),
+        "assumptions": ai_context.assumptions(campus),
+        "recommendation_cards": ai_context.recommendation_cards(campus, metrics or {}, schedule or []),
+        "optimizer_glossary": ai_tools.OPTIMIZER_STATUS_GUIDE,
+        "dataset_label": catalog.DATASET_LABEL,
+    }
+
+    if scenario:
+        difference = _difference_for(scenario, campus, baseline_metrics)
+        changes = difference.get("changes") or []
+        context["scenario"] = {
+            "id": scenario.id,
+            "name": scenario.name,
+            "kind": scenario.kind,
+            "status": scenario.status,
+            "headline": _scenario_headline(scenario),
+            "params": scenario.params or {},
+            "metrics": {
+                key: (scenario.metrics or {}).get(key)
+                for key in (
+                    "sessions_total",
+                    "unassigned_sessions",
+                    "conflicts_total",
+                    "capacity_violations_count",
+                    "facility_mismatch_count",
+                    "availability_violation_count",
+                    "energy_kwh",
+                    "hard_issue_count",
+                )
+            },
+            "plans": [
+                {
+                    "label": plan.label,
+                    "name": plan.name,
+                    "strategy": plan.strategy,
+                    "status": plan.status,
+                    "solver_status": plan.solver_status,
+                    "objective": plan.objective,
+                    "objective_terms": plan.objective_terms,
+                }
+                for plan in (scenario.plans or [])
+            ],
+            "difference": {
+                "change_count": len(changes),
+                "changes": [
+                    {key: change.get(key) for key in ("label", "before", "after", "direction", "impact")}
+                    for change in changes[:12]
+                ],
+            },
+        }
+
+    context["knowledge"]["dataset"]["label"] = catalog.DATASET_LABEL
+    context["knowledge"]["dataset"]["campus"] = catalog.CAMPUS_NAME
+    context["quick_actions"] = ai_tools.quick_actions(context)
+    context["evidence"] = [
+        {"label": "Weekly sessions", "value": metrics.get("sessions_total"), "source": "simulation metrics"},
+        {"label": "Schedule collisions", "value": metrics.get("conflicts_total"), "source": "metrics.conflict_details"},
+        {"label": "Capacity violations", "value": metrics.get("capacity_violations_count"), "source": "metrics.capacity_details"},
+        {"label": "Facility mismatches", "value": metrics.get("facility_mismatch_count"), "source": "metrics.facility_details"},
+        {"label": "Modelled energy (kWh/week)", "value": metrics.get("energy_kwh"), "source": "room power ratings"},
+        {"label": "Open alerts", "value": len(context["alerts"]), "source": "/api/alerts"},
+        {"label": "Self-reported distance unknown", "value": (context["movement"] or {}).get("unknown_distance_transitions"), "source": "movement engine"},
+        {"label": "Tight transitions", "value": (context["movement"] or {}).get("tight_transitions"), "source": "movement engine"},
+        {"label": "Walking speed assumption (m/min)", "value": (context["movement"] or {}).get("walking_speed_m_per_min"), "source": "movement.DEFAULT_WALKING_SPEED_M_PER_MIN"},
+        {"label": "Stored optimisation plans", "value": len(((context.get("scenario") or {}).get("plans") or [])), "source": "scenario.plans"},
+        {"label": "Evidence-backed recommendations", "value": len(context.get("recommendation_cards", [])), "source": "recommendations.build_recommendations"},
+    ]
+    return context
+
+
+def _require_ai_enabled() -> None:
+    if not ai_service.status()["enabled"]:
+        raise HTTPException(503, "Mirror AI is disabled. Set AI_ENABLED=true to enable the copilot.")
+
+
+@router.get("/ai/status")
+def ai_status():
+    return {"ai": ai_service.status()}
+
+
+@router.post("/ai/chat")
+def ai_chat(body: AIChatRequest, db: OrmSession = Depends(get_db)):
+    _require_ai_enabled()
+    message = (body.message or "").strip()
+    if not message:
+        raise HTTPException(422, "A question is required.")
+    context = _ai_context(db, body.scenario_id)
+    mode = ai_modes.normalize_mode(body.mode)
+    history = [turn.model_dump() for turn in body.history]
+    tools = ai_registry.run_for(mode, message, context)
+    result = ai_service.ask(message, context, history=history, mode=mode)
+    proposal = _build_ai_proposal(db, message, body.scenario_id) if mode == "what_if" else None
+    return {
+        "answer": result["answer"],
+        "provider": result["provider"],
+        "model": result["model"],
+        "used_model": result["used_model"],
+        "mode": result.get("mode"),
+        "capability_mode": mode,
+        "capability_mode_label": ai_modes.MODES[mode]["label"],
+        "tools": tools,
+        "proposal": proposal,
+        "evidence_quality": ai_modes.evidence_quality(
+            context, used_model=bool(result["used_model"]), mode=mode
+        ),
+        "reasoning": ai_modes.reasoning_block(
+            context, used_model=bool(result["used_model"]), mode=mode, tools=tools
+        ),
+        "provider_error_kind": result.get("provider_error_kind"),
+        "provider_error_hint": result.get("provider_error_hint"),
+        "fallback_used": result["fallback_used"],
+        "provider_error": result["provider_error"],
+        "configured": ai_service.status()["configured"],
+        "scenario": (context.get("scenario") or {}).get("name"),
+        "scenario_id": body.scenario_id,
+        "evidence": context.get("evidence", []),
+        "quick_actions": context.get("quick_actions", []),
+        "assumptions": context.get("assumptions", []),
+        "recommendation_cards": context.get("recommendation_cards", []),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Mirror AI — context, streaming and confirmed proposals
+# ---------------------------------------------------------------------------
+
+
+_AI_PROPOSALS: dict[str, dict] = {}
+_AI_PROPOSAL_TTL_SECONDS = 900
+
+
+def _prune_ai_proposals() -> None:
+    cutoff = time.time() - _AI_PROPOSAL_TTL_SECONDS
+    for key in [key for key, value in _AI_PROPOSALS.items() if value.get("created", 0) < cutoff]:
+        _AI_PROPOSALS.pop(key, None)
+
+
+@router.get("/ai/context")
+def ai_context_route(scenario_id: str | None = Query(None), db: OrmSession = Depends(get_db)):
+    """Return the exact grounded context Mirror AI answers from."""
+    context = _ai_context(db, scenario_id)
+    return {
+        "context": context,
+        "counts": {
+            "evidence": len(context.get("evidence", [])),
+            "alerts": len(context.get("alerts", [])),
+            "recommendation_cards": len(context.get("recommendation_cards", [])),
+        },
+    }
+
+
+@router.post("/ai/validate")
+def ai_validate():
+    """Live provider check. Generates no tokens and never returns the key."""
+    _require_ai_enabled()
+    return {"validation": ai_service.validate_connection()}
+
+
+@router.post("/ai/chat/stream")
+def ai_chat_stream(body: AIChatRequest, db: OrmSession = Depends(get_db)):
+    """Server-sent events: meta, then deltas, then a done event with evidence."""
+    _require_ai_enabled()
+    message = (body.message or "").strip()
+    if not message:
+        raise HTTPException(422, "A question is required.")
+    context = _ai_context(db, body.scenario_id)
+    history = [turn.model_dump() for turn in body.history]
+    mode = ai_modes.normalize_mode(body.mode)
+    evidence = context.get("evidence", [])
+    scenario_name = (context.get("scenario") or {}).get("name")
+    # Computed while the request session is open, then reused inside the stream.
+    proposal = _build_ai_proposal(db, message, body.scenario_id) if mode == "what_if" else None
+
+    def events():
+        for event in ai_service.ask_stream(message, context, history, mode=mode):
+            if event.get("type") == "done":
+                tools = ai_registry.run_for(mode, message, context)
+                used_model = bool(event.get("used_model"))
+                event = {
+                    **event,
+                    "evidence": evidence,
+                    "evidence_quality": ai_modes.evidence_quality(
+                        context, used_model=used_model, mode=mode
+                    ),
+                    "reasoning": ai_modes.reasoning_block(
+                        context, used_model=used_model, mode=mode, tools=tools
+                    ),
+                    "scenario": scenario_name,
+                    "capability_mode": mode,
+                    "capability_mode_label": ai_modes.MODES[mode]["label"],
+                    "tools": tools,
+                    "proposal": proposal,
+                    "scenario_id": body.scenario_id,
+                    "configured": ai_service.status()["configured"],
+                    "quick_actions": context.get("quick_actions", []),
+                    "assumptions": context.get("assumptions", []),
+                    "recommendation_cards": context.get("recommendation_cards", []),
+                }
+            yield f"data: {json.dumps(event, default=str)}\n\n"
+
+    return StreamingResponse(
+        events(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-store", "X-Accel-Buffering": "no"},
+    )
+
+
+def _build_ai_proposal(db: OrmSession, message: str, scenario_id: str | None) -> dict:
+    """Parse and validate a described disruption into a stored-pending proposal.
+
+    Shared by ``POST /api/ai/proposal`` and What-if chat so both validate against
+    the same live campus. Nothing is written: applying requires an explicit
+    confirmation through ``/api/ai/proposal/apply``.
+    """
+    _prune_ai_proposals()
+    campus = load_campus(db)
+    parsed = ai_tools.parse_scenario_request(message, campus)
+    proposal_id = None
+    if parsed["understood"]:
+        proposal_id = uuid.uuid4().hex
+        _AI_PROPOSALS[proposal_id] = {
+            "created": time.time(),
+            "name": parsed["name"],
+            "kind": parsed["kind"],
+            "params": parsed["params"],
+            "message": message,
+            "scenario_id": scenario_id,
+        }
+    return {
+        **parsed,
+        "proposal_id": proposal_id,
+        "expires_in_seconds": _AI_PROPOSAL_TTL_SECONDS,
+        "applied": False,
+        "requires_confirmation": True,
+    }
+
+
+@router.get("/ai/briefing")
+def ai_briefing(scenario_id: str | None = Query(None), db: OrmSession = Depends(get_db)):
+    """Campus Intelligence Briefing, composed from the grounded context.
+
+    Deterministic: it needs no provider and never claims one answered.
+    """
+    context = _ai_context(db, scenario_id)
+    return {
+        "briefing": ai_modes.build_briefing(context),
+        "modes": [ai_modes.MODES[key] for key in ai_modes.MODES_ORDER],
+    }
+
+
+@router.get("/ai/tools")
+def ai_tools_route():
+    """The allowlisted tool registry and the most recent executions."""
+    return {
+        "tools": ai_registry.catalog(),
+        "recent": ai_registry.recent(15),
+        "policy": (
+            "Read-only tools over already-computed services. Scenario creation is disabled here and requires "
+            "the confirmation endpoint, which writes an audit record."
+        ),
+    }
+
+
+@router.post("/ai/proposal")
+def ai_proposal(body: AIProposalRequest, db: OrmSession = Depends(get_db)):
+    """Translate a sentence into a validated proposal. Never applies it."""
+    _require_ai_enabled()
+    return {"proposal": _build_ai_proposal(db, body.message, body.scenario_id)}
+
+
+@router.post("/ai/proposal/apply", status_code=201)
+def ai_proposal_apply(body: AIApplyRequest, db: OrmSession = Depends(get_db)):
+    """Create the scenario behind a proposal, only after explicit confirmation."""
+    _require_ai_enabled()
+    _prune_ai_proposals()
+    stored = _AI_PROPOSALS.get(body.proposal_id)
+    if stored is None:
+        raise HTTPException(409, "This proposal is unknown or has expired. Ask Mirror AI for a new one.")
+    if not body.confirmed:
+        raise HTTPException(400, "A scenario is only created after explicit confirmation.")
+    scenario, baseline_metrics, difference = _persist_scenario(
+        db, name=stored["name"], kind=stored["kind"], params=stored["params"]
+    )
+    db.add(
+        AuditLog(
+            action="AI_SCENARIO_CONFIRMED",
+            scenario_id=scenario.id,
+            detail={
+                "proposal_id": body.proposal_id,
+                "confirmed": True,
+                "request": str(stored["message"])[:300],
+                "params": stored["params"],
+            },
+        )
+    )
+    db.commit()
+    _AI_PROPOSALS.pop(body.proposal_id, None)
+    return {
+        "scenario": _scenario_detail(scenario, baseline_metrics, difference=difference),
+        "proposal_id": body.proposal_id,
+        "confirmed": True,
+    }
+
+
+# ---------------------------------------------------------------------------
+# # Scenarios and optimization
 # ---------------------------------------------------------------------------
 
 
@@ -468,29 +975,36 @@ def list_scenarios(limit: int = Query(50, ge=1, le=200), db: OrmSession = Depend
     return {"scenarios": [_scenario_summary(s) for s in scenarios], "count": len(scenarios)}
 
 
-@router.post("/scenarios", status_code=201)
-def create_scenario(body: ScenarioCreate, db: OrmSession = Depends(get_db)):
+def _persist_scenario(
+    db: OrmSession, *, name: str, kind: str | None, params: dict
+) -> tuple[Scenario, dict, dict]:
+    """Validate, simulate, persist and audit a scenario.
+
+    Shared by ``POST /api/scenarios`` and the confirmed Mirror AI proposal path
+    so both run identical validation, diagnostics and audit logging.
+    """
     campus, baseline_metrics, baseline_schedule = _baseline(db)
-    params = body.params.model_dump()
     errors = validate_params(campus, params)
     if errors:
         raise HTTPException(422, " ".join(errors))
     try:
-        result = simulate(campus, params, name=body.name, kind=body.kind or infer_kind(params))
+        result = simulate(campus, params, name=name, kind=kind or infer_kind(params))
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
     diagnostics = dict(result["diagnostics"])
     diagnostics.update(
         {
-            "baseline_metrics": {k: v for k, v in baseline_metrics.items() if k != "schedule"},
+            "baseline_metrics": {key: value for key, value in baseline_metrics.items() if key != "schedule"},
             "baseline_schedule": baseline_schedule,
             "campus_fingerprint": _fingerprint(campus),
             "created_dataset": catalog.DATASET_LABEL,
+            "state": scenario_state(campus, params),
+            "severity": assess_severity(campus, params),
         }
     )
     scenario = Scenario(
-        name=body.name,
-        kind=body.kind or infer_kind(params),
+        name=name,
+        kind=kind or infer_kind(params),
         params=params,
         status="simulated",
         metrics=result["metrics"],
@@ -505,7 +1019,16 @@ def create_scenario(body: ScenarioCreate, db: OrmSession = Depends(get_db)):
     db.refresh(scenario)
     db.add(AuditLog(action="SCENARIO_CREATED", scenario_id=scenario.id, detail={"name": scenario.name, "kind": scenario.kind}))
     db.commit()
-    return {"scenario": _scenario_detail(scenario, baseline_metrics)}
+    difference = _difference_for(scenario, campus, baseline_metrics)
+    return scenario, baseline_metrics, difference
+
+
+@router.post("/scenarios", status_code=201)
+def create_scenario(body: ScenarioCreate, db: OrmSession = Depends(get_db)):
+    scenario, baseline_metrics, difference = _persist_scenario(
+        db, name=body.name, kind=body.kind, params=body.params.model_dump()
+    )
+    return {"scenario": _scenario_detail(scenario, baseline_metrics, difference=difference)}
 
 
 @router.get("/scenarios/{scenario_id}")
@@ -513,12 +1036,21 @@ def get_scenario(scenario_id: str, db: OrmSession = Depends(get_db)):
     scenario = db.get(Scenario, scenario_id)
     if scenario is None:
         raise HTTPException(404, "Scenario not found.")
-    _, baseline_metrics, _ = _baseline(db)
+    campus, baseline_metrics, _ = _baseline(db)
+    baseline = _stored_baseline(scenario, {k: v for k, v in baseline_metrics.items() if k != "schedule"})
+    difference = _difference_for(scenario, campus, baseline_metrics)
     return {
-        "scenario": _scenario_detail(
-            scenario, _stored_baseline(scenario, {k: v for k, v in baseline_metrics.items() if k != "schedule"})
-        )
+        "scenario": _scenario_detail(scenario, baseline, difference=difference)
     }
+
+
+@router.get("/scenarios/{scenario_id}/difference")
+def get_scenario_difference(scenario_id: str, db: OrmSession = Depends(get_db)):
+    scenario = db.get(Scenario, scenario_id)
+    if scenario is None:
+        raise HTTPException(404, "Scenario not found.")
+    campus, baseline_metrics, _ = _baseline(db)
+    return {"difference": _difference_for(scenario, campus, baseline_metrics)}
 
 
 @router.post("/scenarios/{scenario_id}/optimize", status_code=202)
@@ -566,7 +1098,10 @@ def _find_plan(scenario: Scenario, label: str | None) -> ScenarioPlan | None:
         return None
     if label:
         return next((p for p in plans if p.label == label.upper()), None)
-    return next((p for p in plans if p.status == "FEASIBLE"), plans[0])
+    return next(
+        (p for p in plans if p.status == "FEASIBLE"),
+        next((p for p in plans if p.status == "FEASIBLE_HEURISTIC"), plans[0]),
+    )
 
 
 @router.get("/compare")
@@ -598,8 +1133,10 @@ def compare(scenario_id: str = Query(...), plan: str | None = Query(None), db: O
         weights=weights,
         scenario_name=scenario.name,
     )
+    difference = _difference_for(scenario, campus, current_baseline)
     return {
-        "scenario": _scenario_detail(scenario, baseline),
+        "scenario": _scenario_detail(scenario, baseline, difference=difference),
+        "difference": difference,
         "baseline": {**baseline, "schedule": baseline_schedule},
         "scenario_metrics": scenario.metrics,
         "scenario_schedule": scenario.schedule,
@@ -777,7 +1314,7 @@ def scenario_report(scenario_id: str, db: OrmSession = Depends(get_db)):
         raise HTTPException(404, "Scenario not found.")
     _, current_baseline, _ = _baseline(db)
     baseline = _stored_baseline(scenario, {k: v for k, v in current_baseline.items() if k != "schedule"})
-    feasible = [p for p in scenario.plans if p.status == "FEASIBLE" and p.metrics]
+    feasible = [p for p in scenario.plans if p.status in {"FEASIBLE", "FEASIBLE_HEURISTIC"} and p.metrics]
     recommended = recommend_plan(
         [{"label": p.label, "name": p.name, "status": p.status, "metrics": p.metrics, "audit": p.audit} for p in scenario.plans],
         ((scenario.diagnostics or {}).get("optimization") or {}).get("weights"),

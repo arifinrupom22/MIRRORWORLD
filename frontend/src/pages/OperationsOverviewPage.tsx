@@ -99,7 +99,9 @@ export function OperationsOverviewPage() {
   const sparks = heat.slice(0, 7).map((cell) => cell.utilization_pct)
 
   const handleAlert = (alert: AlertItem) => {
-    if (alert.action === 'optimize') navigate('/optimizer')
+    const route = alert.suggested_action?.route
+    if (route) navigate(route)
+    else if (alert.action === 'optimize') navigate('/optimizer')
     else if (alert.action === 'campus') navigate('/campus')
     else navigate('/simulation')
   }
@@ -285,7 +287,7 @@ export function OperationsOverviewPage() {
             <PanelHeader
               eyebrow="Reproducible baseline"
               title="Weekly timetable"
-              subtitle="112 sessions generated from the campus model. Cells are coloured by course; overlapping bookings are outlined in red."
+              subtitle={`${data.summary.sessions} sessions generated from the campus model. Cells are coloured by course; overlapping bookings are outlined in red.`}
               action={<Badge tone="neutral">week 7</Badge>}
             />
             <div className="p-4">
@@ -328,7 +330,7 @@ export function OperationsOverviewPage() {
             </Panel>
 
             <Panel>
-              <PanelHeader eyebrow="Teaching load" title="Instructor balance & movement" subtitle="Weekly contact hours are compared with each instructor's declared limit. Movement is a model estimate from zone coordinates." />
+              <PanelHeader eyebrow="Teaching load" title="Instructor balance & movement" subtitle="Weekly contact hours are compared with each instructor's declared limit. Movement is a timetable-based estimate from documented building distances, not live tracking." />
               <div className="grid grid-cols-2 gap-4 p-5">
                 <div>
                   <div className="telemetry mb-1.5">Max weekly load</div>
@@ -384,7 +386,7 @@ export function OperationsOverviewPage() {
                           'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border',
                           alert.severity === 'critical'
                             ? 'border-critical/30 bg-critical/10 text-critical'
-                            : alert.severity === 'warning'
+                            : alert.severity === 'high' || alert.severity === 'medium'
                               ? 'border-warning/30 bg-warning/10 text-warning'
                               : 'border-cyan/25 bg-cyan/10 text-cyan',
                         )}
@@ -392,11 +394,23 @@ export function OperationsOverviewPage() {
                         <AlertTriangle className="h-3 w-3" />
                       </span>
                       <button type="button" onClick={() => handleAlert(alert)} className="focus-ring min-w-0 flex-1 text-left">
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           <span className="text-[11px] font-medium text-ink">{alert.title}</span>
+                          <Badge tone={alert.severity === 'critical' ? 'critical' : alert.severity === 'high' || alert.severity === 'medium' ? 'warning' : 'info'}>
+                            {alert.severity_label ?? alert.severity}
+                          </Badge>
                           <span className="ml-auto font-mono text-[8px] uppercase tracking-[0.06em] text-faint">{alert.category}</span>
                         </div>
-                        <p className="mt-0.5 line-clamp-2 text-[10px] leading-relaxed text-faint">{alert.detail}</p>
+                        <p className="mt-0.5 line-clamp-2 text-[10px] leading-relaxed text-faint">{alert.description ?? alert.detail}</p>
+                        {alert.consequences && <p className="mt-1 text-[9px] leading-relaxed text-warning/85">Consequence: {alert.consequences}</p>}
+                        {alert.suggested_action?.text && <p className="mt-1 text-[9px] leading-relaxed text-cyan/80">Next: {alert.suggested_action.text}</p>}
+                        {!!alert.affected_resources?.length && (
+                          <div className="mt-1.5 flex flex-wrap gap-1">
+                            {alert.affected_resources.slice(0, 5).map((resource) => (
+                              <Badge key={`${alert.id}:${resource.type}:${resource.id}`} tone="neutral">{resource.label}</Badge>
+                            ))}
+                          </div>
+                        )}
                         {alert.slot && <div className="mt-1 font-mono text-[8px] text-faint/80">{alert.slot}</div>}
                       </button>
                       <Tooltip content="Dismiss for this view">
@@ -419,6 +433,39 @@ export function OperationsOverviewPage() {
                 <button type="button" onClick={() => setDismissed(new Set())} className="focus-ring text-[9.5px] text-cyan/80 hover:text-cyan">
                   Restore {dismissed.size} dismissed alert{dismissed.size === 1 ? '' : 's'}
                 </button>
+              </div>
+            )}
+          </Panel>
+
+          <Panel>
+            <PanelHeader
+              eyebrow="Decision support"
+              title="Recommended actions"
+              subtitle="Ranked from computed utilisation, capacity, conflict and modelled-energy signals."
+              action={<Badge tone="neutral">{data.recommendations?.length ?? 0} actions</Badge>}
+            />
+            {(data.recommendations ?? []).length === 0 ? (
+              <EmptyState title="No recommendation clears its threshold" description="The computed signals are inside their planning bands; no generic advice is generated." />
+            ) : (
+              <div className="divide-y divide-lineSoft">
+                {(data.recommendations ?? []).map((recommendation) => (
+                  <div key={recommendation.id} className="px-4 py-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[11px] font-medium text-ink">{recommendation.title}</span>
+                      <Badge tone={recommendation.confidence === 'high' ? 'success' : 'warning'}>{recommendation.confidence} confidence</Badge>
+                    </div>
+                    <p className="mt-1 text-[10px] leading-relaxed text-muted">{recommendation.action}</p>
+                    <p className="mt-1 text-[9px] leading-relaxed text-faint">{recommendation.rationale}</p>
+                    <div className="mt-1.5 flex flex-wrap gap-1">
+                      {recommendation.affected_resources.slice(0, 4).map((resource) => (
+                        <Badge key={`${recommendation.id}:${resource.id}`} tone="neutral">{resource.label}</Badge>
+                      ))}
+                    </div>
+                    <Link to={recommendation.route} className="focus-ring mt-1.5 inline-flex items-center gap-1 text-[9px] text-cyan/80 hover:text-cyan">
+                      Review in workspace <ArrowRight className="h-2.5 w-2.5" />
+                    </Link>
+                  </div>
+                ))}
               </div>
             )}
           </Panel>

@@ -6,6 +6,7 @@ import { CommandPalette } from './CommandPalette'
 import { Sidebar } from './Sidebar'
 import { TopBar } from './TopBar'
 import { ToastViewport } from '../ui'
+import { GuidedTour } from '../GuidedTour'
 
 export function AppShell() {
   const location = useLocation()
@@ -61,6 +62,7 @@ export function AppShell() {
       </div>
       <CommandPalette />
       <ToastViewport />
+      <GuidedTour />
     </div>
   )
 }

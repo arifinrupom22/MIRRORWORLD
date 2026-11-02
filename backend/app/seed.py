@@ -195,8 +195,8 @@ def _build_sessions() -> list[dict]:
         teacher = teacher_by_id[course["teacher_id"]]
         length = session["length"]
         best: tuple[float, str, int, int] | None = None
-        for day in range(5):
-            for slot in range(0, 7 - length + 1):
+        for day in range(catalog.TEACHING_DAYS):
+            for slot in range(0, catalog.SLOTS_PER_DAY - length + 1):
                 if any((group["id"], day, slot + off) in group_busy for off in range(length)):
                     continue
                 if any((teacher["id"], day, slot + off) in teacher_busy for off in range(length)):

@@ -8,12 +8,14 @@ interface AppState {
   mobileNavOpen: boolean
   commandOpen: boolean
   notificationsOpen: boolean
+  tourOpen: boolean
   setActiveScenario: (id: string, name: string) => void
   clearActiveScenario: () => void
   toggleSidebar: () => void
   setMobileNavOpen: (open: boolean) => void
   setCommandOpen: (open: boolean) => void
   setNotificationsOpen: (open: boolean) => void
+  setTourOpen: (open: boolean) => void
 }
 
 export const useAppStore = create<AppState>()(
@@ -25,12 +27,14 @@ export const useAppStore = create<AppState>()(
       mobileNavOpen: false,
       commandOpen: false,
       notificationsOpen: false,
+      tourOpen: false,
       setActiveScenario: (id, name) => set({ activeScenarioId: id, activeScenarioName: name }),
       clearActiveScenario: () => set({ activeScenarioId: null, activeScenarioName: null }),
       toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
       setMobileNavOpen: (open) => set({ mobileNavOpen: open }),
       setCommandOpen: (open) => set({ commandOpen: open }),
       setNotificationsOpen: (open) => set({ notificationsOpen: open }),
+      setTourOpen: (open) => set({ tourOpen: open }),
     }),
     {
       name: 'mirrorworld-ui',

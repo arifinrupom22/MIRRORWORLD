@@ -8,6 +8,7 @@ import { DependencyExplorerPage } from './pages/DependencyExplorerPage'
 import { DigitalCampusPage } from './pages/DigitalCampusPage'
 import { HistoryPage } from './pages/HistoryPage'
 import { MethodologyPage } from './pages/MethodologyPage'
+import { MirrorAIPage } from './pages/MirrorAIPage'
 import { OperationsOverviewPage } from './pages/OperationsOverviewPage'
 import { ScheduleOptimizerPage } from './pages/ScheduleOptimizerPage'
 import { SimulationStudioPage } from './pages/SimulationStudioPage'
@@ -71,6 +72,7 @@ export default function App() {
           <Route path="/simulation" element={<SimulationStudioPage />} />
           <Route path="/dependencies" element={<DependencyExplorerPage />} />
           <Route path="/optimizer" element={<ScheduleOptimizerPage />} />
+          <Route path="/mirror-ai" element={<MirrorAIPage />} />
           <Route path="/comparison" element={<ComparisonPage />} />
           <Route path="/model" element={<CampusModelPage />} />
           <Route path="/history" element={<HistoryPage />} />

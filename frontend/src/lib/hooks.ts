@@ -8,10 +8,16 @@ export const queryKeys = {
   scenarios: ['scenarios'] as const,
   scenario: (id: string) => ['scenario', id] as const,
   compare: (id: string, plan: string | undefined) => ['compare', id, plan ?? 'auto'] as const,
+  difference: (id: string) => ['difference', id] as const,
   graph: (scenarioId?: string | null) => ['graph', scenarioId ?? 'baseline'] as const,
   impact: (nodeId: string, scenarioId?: string | null, depth = 3) =>
     ['impact', nodeId, scenarioId ?? 'baseline', depth] as const,
   history: ['history'] as const,
+  alerts: (scenarioId?: string | null) => ['alerts', scenarioId ?? 'baseline'] as const,
+  recommendations: (scenarioId?: string | null) => ['recommendations', scenarioId ?? 'baseline'] as const,
+  templates: ['templates'] as const,
+  movement: (scenarioId?: string | null, day?: number | null, slot?: number | null) =>
+    ['movement', scenarioId ?? 'baseline', day ?? 'all', slot ?? 'all'] as const,
   job: (id: string) => ['job', id] as const,
 }
 
@@ -25,6 +31,26 @@ export function useCampus() {
 
 export function useOverview() {
   return useQuery({ queryKey: queryKeys.overview, queryFn: api.overview, staleTime: 20_000 })
+}
+
+export function useAlerts(scenarioId?: string | null) {
+  return useQuery({
+    queryKey: queryKeys.alerts(scenarioId),
+    queryFn: () => api.alerts(scenarioId),
+    staleTime: 10_000,
+  })
+}
+
+export function useRecommendations(scenarioId?: string | null) {
+  return useQuery({
+    queryKey: queryKeys.recommendations(scenarioId),
+    queryFn: () => api.recommendations(scenarioId),
+    staleTime: 20_000,
+  })
+}
+
+export function useTemplates() {
+  return useQuery({ queryKey: queryKeys.templates, queryFn: api.templates, staleTime: 60_000 })
 }
 
 export function useScenarios() {
@@ -45,6 +71,15 @@ export function useComparison(id: string | null | undefined, plan?: string) {
   return useQuery({
     queryKey: queryKeys.compare(id ?? 'none', plan),
     queryFn: () => api.compare(id as string, plan),
+    enabled: Boolean(id),
+    staleTime: 10_000,
+  })
+}
+
+export function useDifference(id: string | null | undefined) {
+  return useQuery({
+    queryKey: queryKeys.difference(id ?? 'none'),
+    queryFn: () => api.difference(id as string),
     enabled: Boolean(id),
     staleTime: 10_000,
   })
@@ -82,5 +117,22 @@ export function useJob(jobId: string | null | undefined) {
       return ['queued', 'running', 'cancelling'].includes(status) ? 900 : false
     },
     refetchOnWindowFocus: false,
+  })
+}
+
+export function useMovement(options?: { scenarioId?: string | null; day?: number | null; slot?: number | null; enabled?: boolean }) {
+  return useQuery({
+    queryKey: queryKeys.movement(options?.scenarioId, options?.day, options?.slot),
+    queryFn: () => api.movement(options),
+    staleTime: 10_000,
+    enabled: options?.enabled ?? true,
+  })
+}
+
+export function useMovementDaySlot(day: number, slot: number) {
+  return useQuery({
+    queryKey: queryKeys.movement(undefined, day, slot),
+    queryFn: () => api.movement({ day, slot }),
+    staleTime: 10_000,
   })
 }

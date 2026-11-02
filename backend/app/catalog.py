@@ -23,9 +23,15 @@ TIME_SLOTS = [
     {"index": 4, "start": "14:40", "end": "16:10", "label": "14:40–16:10"},
     {"index": 5, "start": "16:20", "end": "17:50", "label": "16:20–17:50"},
     {"index": 6, "start": "18:00", "end": "19:30", "label": "18:00–19:30"},
+    {"index": 7, "start": "19:40", "end": "21:10", "label": "19:40–21:10"},
 ]
 
 SLOT_HOURS = 1.5
+# Single source for week shape. Changing these constants and the DAYS/SLOTS
+# tables is sufficient for a different teaching week; engine code must not
+# hard-code 5 or 7.
+TEACHING_DAYS = len(DAYS)
+SLOTS_PER_DAY = len(TIME_SLOTS)
 
 BUILDINGS = [
     {

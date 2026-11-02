@@ -217,13 +217,36 @@ def impact_analysis(campus: Campus, graph: dict, node_id: str, scenario_params: 
     ctx = build_context(campus, scenario_params or {})
     alternatives = []
     affected_courses = {n["raw_id"] for n in direct + indirect if n["type"] == "course"}
-    affected_rooms = {n["raw_id"] for n in direct + indirect if n["type"] == "room"}
+    # Exclude the selected room and directly affected rooms, not every room
+    # that is structurally reachable through a building. The previous version
+    # excluded the entire building's room set and often returned no
+    # alternatives at all.
+    affected_rooms = {n["raw_id"] for n in direct if n["type"] == "room"}
+    if node_by_id[node_id]["type"] == "room":
+        affected_rooms.add(node_by_id[node_id]["raw_id"])
     for course_id in affected_courses:
         course = campus.course_index[course_id]
+        # Use the cohort sizes actually enrolled in this course. The previous
+        # implementation used the largest cohort on campus, which could hide a
+        # genuinely feasible smaller room or propose a room that is too small.
+        course_group_ids = [
+            link["group_id"] for link in campus.group_courses if link["course_id"] == course_id
+        ]
+        course_sizes = [
+            ctx["group_sizes"][group_id]
+            for group_id in course_group_ids
+            if group_id in ctx["group_sizes"]
+        ]
+        required_size = max(course_sizes) if course_sizes else 0
         for room in campus.rooms:
             if room["id"] in affected_rooms or room["id"] not in ctx["available_rooms"]:
                 continue
-            if allowed_rooms_for_course(course, room, max(ctx["group_sizes"].values())):
+            if allowed_rooms_for_course(
+                course,
+                room,
+                required_size,
+                removed_equipment=ctx.get("removed_equipment"),
+            ):
                 alternatives.append(
                     {
                         "room_id": room["id"],
@@ -232,6 +255,7 @@ def impact_analysis(campus: Campus, graph: dict, node_id: str, scenario_params: 
                         "capacity": room["capacity"],
                         "kind": room["kind"],
                         "course_code": course["code"],
+                        "required_size": required_size,
                     }
                 )
         if len(alternatives) >= 10:

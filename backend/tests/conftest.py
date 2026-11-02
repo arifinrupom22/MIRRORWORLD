@@ -24,6 +24,20 @@ from app.db import Base, SessionLocal, engine  # noqa: E402
 from app.jobs import seed_demo_scenarios  # noqa: E402
 from app.seed import seed_if_empty  # noqa: E402
 
+_AI_KEY_VARS = ("MIRROR_AI_API_KEY", "GOOGLE_API_KEY", "GEMINI_API_KEY", "AI_API_KEY")
+
+
+@pytest.fixture(autouse=True)
+def isolated_ai_credentials(monkeypatch):
+    """Keep a real key in backend/.env from leaking into the test suite.
+
+    ``app.env`` loads that file into ``os.environ``, so without this a developer
+    with a live key would silently make real provider calls from tests and the
+    deterministic-mode assertions would fail.
+    """
+    for name in _AI_KEY_VARS:
+        monkeypatch.delenv(name, raising=False)
+
 
 @pytest.fixture(scope="session")
 def db():

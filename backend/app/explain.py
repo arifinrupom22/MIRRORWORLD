@@ -97,8 +97,11 @@ def _signed(value, unit: str = "") -> str:
     return f"{sign}{_fmt(value, unit)}"
 
 
+USABLE_PLAN_STATUSES = {"FEASIBLE", "FEASIBLE_HEURISTIC"}
+
+
 def recommend_plan(plans: list[dict], weights: dict | None) -> dict | None:
-    feasible = [p for p in plans if p.get("metrics") and p.get("status") == "FEASIBLE"]
+    feasible = [p for p in plans if p.get("metrics") and p.get("status") in USABLE_PLAN_STATUSES]
     if not feasible:
         return None
     weights = weights or {"energy": 0.25, "utilization": 0.25, "movement": 0.5}
@@ -159,7 +162,7 @@ def build_explanation(
 ) -> dict:
     recommendation = recommend_plan(plans, weights)
     statements: list[dict] = []
-    feasible = [p for p in plans if p.get("metrics") and p.get("status") == "FEASIBLE"]
+    feasible = [p for p in plans if p.get("metrics") and p.get("status") in USABLE_PLAN_STATUSES]
     selected = next((p for p in feasible if recommendation and p["label"] == recommendation["label"]), None)
 
     if scenario.get("unassigned_sessions", 0) > 0:
@@ -283,7 +286,7 @@ def build_explanation(
             }
         )
 
-    failed = [p for p in plans if p.get("status") not in {"FEASIBLE", None}]
+    failed = [p for p in plans if p.get("status") not in USABLE_PLAN_STATUSES | {None}]
     if failed:
         statements.append(
             {
@@ -326,6 +329,6 @@ def build_explanation(
             "Energy is a modeled estimate (kWh/week), not a utility meter reading.",
             "Movement uses the documented building distance matrix.",
             "Weekly teaching-hour limits are enforced as hard constraints.",
-            "Only measured solver statuses are reported; FEASIBLE is never labelled optimal unless the solver proves it.",
+            "Only measured solver statuses are reported; FEASIBLE is never labelled optimal unless the solver proves it. FEASIBLE_HEURISTIC is a verified constructive fallback, not a CP-SAT-confirmed result.",
         ],
     }

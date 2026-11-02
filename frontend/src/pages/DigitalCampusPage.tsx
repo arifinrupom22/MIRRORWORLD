@@ -8,6 +8,7 @@ import {
   Compass,
   DoorOpen,
   FlaskConical,
+  Footprints,
   Layers3,
   MapPin,
   Search,
@@ -15,15 +16,71 @@ import {
   X,
   Zap,
 } from 'lucide-react'
-import { useCampus } from '../lib/hooks'
-import type { Room, ScheduleEntry } from '../lib/types'
+import { useCampus, useMovement } from '../lib/hooks'
+import type { MovementTransition, Room, ScheduleEntry } from '../lib/types'
 import { cn, fmtNumber, fmtPct } from '../lib/utils'
 import { Badge, Button, EmptyState, ErrorState, IconButton, Input, LoadingBlock, Modal, Panel, PanelHeader, Segmented } from '../components/ui'
 import { BarMeter, UtilizationRing } from '../components/charts'
 import { KpiCard, PipelineStrip, Provenance } from '../components/shared'
+import { CampusScene3D } from '../components/CampusScene3D'
 
 const SLOT_HOURS = 1.5
 const WEEK_SLOTS = 35
+
+type MovementTone = 'feasible' | 'tight' | 'unknown' | 'infeasible'
+
+const MOVEMENT_COLOURS: Record<MovementTone, string> = {
+  feasible: '#38D9F5',
+  tight: '#F2B23E',
+  unknown: '#8B9BB4',
+  infeasible: '#FF5D73',
+}
+
+const MOVEMENT_LABELS: Record<MovementTone, string> = {
+  feasible: 'feasible walk',
+  tight: 'tight transfer',
+  unknown: 'distance unknown',
+  infeasible: 'insufficient time',
+}
+
+function formatGap(minutes: number): string {
+  return minutes >= 180 ? `${(minutes / 60).toFixed(1)} h` : `${minutes} min`
+}
+
+function movementTone(transition: MovementTransition): {
+  key: MovementTone
+  label: string
+  tone: 'success' | 'warning' | 'critical' | 'neutral'
+  dot: string
+} {
+  if (transition.feasible === false) {
+    return { key: 'infeasible', label: 'insufficient time', tone: 'critical', dot: 'bg-critical' }
+  }
+  if (transition.unknown_distance) {
+    return { key: 'unknown', label: 'distance unknown', tone: 'neutral', dot: 'bg-muted' }
+  }
+  if (transition.tight === true) {
+    return { key: 'tight', label: 'tight transfer', tone: 'warning', dot: 'bg-warning' }
+  }
+  return { key: 'feasible', label: 'feasible walk', tone: 'success', dot: 'bg-success' }
+}
+
+function pointOnBoxEdge(
+  box: { x: number; y: number; w: number; h: number },
+  towardsX: number,
+  towardsY: number,
+): { x: number; y: number } {
+  const centreX = box.x + box.w / 2
+  const centreY = box.y + box.h / 2
+  const dx = towardsX - centreX
+  const dy = towardsY - centreY
+  if (dx === 0 && dy === 0) return { x: centreX, y: centreY }
+  const scale = Math.min(
+    dx === 0 ? Number.POSITIVE_INFINITY : (box.w / 2 + 8) / Math.abs(dx),
+    dy === 0 ? Number.POSITIVE_INFINITY : (box.h / 2 + 8) / Math.abs(dy),
+  )
+  return { x: centreX + dx * scale, y: centreY + dy * scale }
+}
 
 export function DigitalCampusPage() {
   const { data: campus, isLoading, isError, error, refetch } = useCampus()
@@ -36,6 +93,22 @@ export function DigitalCampusPage() {
   const [slot, setSlot] = useState<number | null>(null)
   const [detail, setDetail] = useState<ScheduleEntry | null>(null)
   const [showOccupied, setShowOccupied] = useState(true)
+  const [showMovement, setShowMovement] = useState(true)
+  // The 3D twin is the headline view, but it is only offered when the browser
+  // can actually create a WebGL context — the schematic 2D plan stays the
+  // guaranteed fallback.
+  const [view, setView] = useState<'3d' | '2d'>(() => {
+    if (typeof document === 'undefined') return '2d'
+    try {
+      const canvas = document.createElement('canvas')
+      const context = canvas.getContext('webgl2') ?? canvas.getContext('webgl')
+      return context ? '3d' : '2d'
+    } catch {
+      return '2d'
+    }
+  })
+  const [interBuildingOnly, setInterBuildingOnly] = useState(true)
+  const [activeTransition, setActiveTransition] = useState<MovementTransition | null>(null)
 
   const schedule = campus?.baseline_schedule ?? []
 
@@ -57,6 +130,27 @@ export function DigitalCampusPage() {
 
   const effectiveDay = campus ? Math.min(day ?? peak.day, campus.days.length - 1) : 0
   const effectiveSlot = campus ? Math.min(slot ?? peak.slot, campus.time_slots.length - 1) : 0
+
+  // Phase 3: timetable-derived student movement into the selected slot.
+  // All values come from the movement engine; nothing here is simulated in the browser.
+  const movementQuery = useMovement({ day: effectiveDay, slot: effectiveSlot, enabled: Boolean(campus) })
+  const movementTransitions = useMemo(() => {
+    const transitions = movementQuery.data?.transitions ?? []
+    return interBuildingOnly ? transitions.filter((transition) => !transition.same_building) : transitions
+  }, [movementQuery.data, interBuildingOnly])
+  const movementSummary = useMemo(() => {
+    const transitions = movementTransitions
+    return {
+      routes: new Set(transitions.map((transition) => `${transition.from_building_id}:${transition.to_building_id}`)).size,
+      transitionEvents: transitions.length,
+      studentTransitions: transitions.reduce((sum, transition) => sum + transition.student_count, 0),
+      studentDistanceM: transitions.reduce((sum, transition) => sum + (transition.distance_m ?? 0) * transition.student_count, 0),
+      studentMinutes: transitions.reduce((sum, transition) => sum + (transition.walking_time_min ?? 0) * transition.student_count, 0),
+      tight: transitions.filter((transition) => transition.tight === true).length,
+      infeasible: transitions.filter((transition) => transition.feasible === false).length,
+      unknown: transitions.filter((transition) => transition.unknown_distance).length,
+    }
+  }, [movementTransitions])
 
   const filteredRooms = useMemo(() => {
     if (!campus) return []
@@ -225,7 +319,7 @@ export function DigitalCampusPage() {
             <PanelHeader
               eyebrow="Illustrative masterplan · not surveyed"
               title="Campus map"
-              subtitle="Select a building to inspect its spaces. Dimmed blocks contain no room matching the current filters."
+              subtitle="Select a building to inspect its spaces, or a movement route to inspect the estimated transition. Dimmed blocks contain no room matching the current filters."
               action={
                 <div className="flex items-center gap-1.5">
                   {campus.buildings.map((building) => (
@@ -243,27 +337,183 @@ export function DigitalCampusPage() {
               }
             />
             <div className="p-4">
-              <CampusMap
-                buildings={campus.buildings}
-                selected={selectedBuilding}
-                onSelect={(id) => { setSelectedBuilding(id); setSelectedRoom(null) }}
-                stats={buildingStats}
-                matchIds={buildingMatchIds}
-              />
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded border border-lineSoft bg-subtle px-3 py-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Segmented
+                    size="sm"
+                    value={view}
+                    onChange={(value) => setView(value as '3d' | '2d')}
+                    options={[
+                      { value: '3d', label: '3D twin' },
+                      { value: '2d', label: '2D plan' },
+                    ]}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowMovement((value) => !value)}
+                    aria-pressed={showMovement}
+                    className={cn(
+                      'focus-ring inline-flex items-center gap-1.5 rounded border px-2 py-1 font-mono text-[8.5px] uppercase tracking-[0.06em] transition-colors',
+                      showMovement ? 'border-cyan/40 bg-cyan/[0.08] text-cyan' : 'border-line text-faint hover:text-muted',
+                    )}
+                  >
+                    <Footprints className="h-3 w-3" /> Movement overlay {showMovement ? 'on' : 'off'}
+                  </button>
+                  <span className="font-mono text-[8.5px] uppercase tracking-[0.07em] text-faint">
+                    {campus.days[effectiveDay]?.label} · {campus.time_slots[effectiveSlot]?.label}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setInterBuildingOnly((value) => !value)}
+                    className={cn('focus-ring rounded border px-2 py-1 font-mono text-[8px] uppercase tracking-[0.06em]', interBuildingOnly ? 'border-lineHover text-muted' : 'border-line text-faint')}
+                  >
+                    {interBuildingOnly ? 'inter-building only' : 'including same building'}
+                  </button>
+                </div>
+                <div className="font-mono text-[8.5px] text-faint">
+                  {movementQuery.isLoading
+                    ? 'estimating flows…'
+                    : `${movementSummary.transitionEvents} transitions · ${fmtNumber(movementSummary.studentTransitions)} student trips`}
+                </div>
+              </div>
+              {view === '3d' ? (
+                <CampusScene3D
+                  buildings={campus.buildings}
+                  selected={selectedBuilding}
+                  onSelect={(id) => { setSelectedBuilding(id); setSelectedRoom(null) }}
+                  transitions={showMovement ? movementTransitions : []}
+                  activeTransitionId={activeTransition?.transition_id ?? null}
+                  onTransitionSelect={setActiveTransition}
+                  showMovement={showMovement}
+                />
+              ) : (
+                <CampusMap
+                  buildings={campus.buildings}
+                  selected={selectedBuilding}
+                  onSelect={(id) => { setSelectedBuilding(id); setSelectedRoom(null) }}
+                  stats={buildingStats}
+                  matchIds={buildingMatchIds}
+                  transitions={showMovement ? movementTransitions : []}
+                  activeTransitionId={activeTransition?.transition_id ?? null}
+                  onTransitionSelect={setActiveTransition}
+                />
+              )}
+              {showMovement && !activeTransition && movementTransitions.length > 1 && view === '2d' && (
+                <div className="mt-2 font-mono text-[8px] uppercase tracking-[0.06em] text-faint">
+                  Map traces the highest-volume transition · select a row below to trace another route
+                </div>
+              )}
               <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[8px] uppercase tracking-[0.07em] text-faint">
                   <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-sm border border-cyan/50 bg-cyan/15" /> selected</span>
-                  <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-sm border border-line bg-subtle" /> no matching rooms</span>
+                  {view === '2d' && (
+                    <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-sm border border-line bg-subtle" /> no matching rooms</span>
+                  )}
+                  <span className="flex items-center gap-1"><span className="h-px w-3" style={{ backgroundColor: MOVEMENT_COLOURS.feasible }} /> feasible walk</span>
+                  <span className="flex items-center gap-1"><span className="h-px w-3" style={{ backgroundColor: MOVEMENT_COLOURS.tight }} /> tight transition</span>
+                  <span className="flex items-center gap-1"><span className="h-px w-3" style={{ backgroundColor: MOVEMENT_COLOURS.infeasible }} /> insufficient time</span>
+                  <span className="flex items-center gap-1"><span className="h-px w-3 border-t border-dashed border-muted" /> distance unknown</span>
                   <span className="flex items-center gap-1"><Compass className="h-3 w-3" /> north ↑</span>
                 </div>
-                <Provenance className="border-0 bg-transparent px-0 py-0">Footprints are schematic, not cadastral data.</Provenance>
+                <Provenance className="border-0 bg-transparent px-0 py-0">Footprints are schematic, not cadastral data. Movement is a timetable estimate, not live tracking.</Provenance>
               </div>
+              {activeTransition && (
+                <div className="mt-3 flex flex-wrap items-start justify-between gap-3 rounded border border-cyan/25 bg-cyan/[0.04] px-3 py-2.5">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium text-ink">
+                      <span>{activeTransition.from_building_name}</span>
+                      <ArrowRight className="h-3 w-3 text-cyan" />
+                      <span>{activeTransition.to_building_name}</span>
+                      {activeTransition.same_building && <Badge tone="neutral">same building</Badge>}
+                    </div>
+                    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[8.5px] uppercase tracking-[0.04em] text-faint">
+                      <span>{activeTransition.cohort_name} · {activeTransition.student_count} students</span>
+                      <span>{activeTransition.from_course_code} {activeTransition.from_time} → {activeTransition.to_course_code} {activeTransition.to_time}</span>
+                      <span>gap {formatGap(activeTransition.time_gap_min)}</span>
+                      {activeTransition.is_cross_day && <span>cross-day</span>}
+                      <span>walk {activeTransition.walking_time_min === null ? 'unknown' : `${activeTransition.walking_time_min} min`}</span>
+                      <span>distance {activeTransition.distance_m === null ? 'unknown' : `${fmtNumber(activeTransition.distance_m)} m`}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MovementStatusBadge transition={activeTransition} />
+                    <IconButton label="Close movement detail" size="sm" variant="ghost" onClick={() => setActiveTransition(null)}><X className="h-3.5 w-3.5" /></IconButton>
+                  </div>
+                </div>
+              )}
             </div>
           </Panel>
 
           <Panel>
             <PanelHeader
-              eyebrow="Live room board"
+              eyebrow="Timetable-derived estimate · not live tracking"
+              title="Student movement"
+              subtitle={`Estimated building-to-building transitions into ${campus.days[effectiveDay]?.label ?? 'the selected day'} · ${campus.time_slots[effectiveSlot]?.label ?? 'selected slot'}. Walking time uses 84 m/min and the catalogued distance between buildings.`}
+              action={<Badge tone={movementSummary.infeasible ? 'critical' : movementSummary.tight ? 'warning' : 'neutral'}>{movementSummary.infeasible} infeasible · {movementSummary.tight} tight</Badge>}
+            />
+            <div className="grid grid-cols-2 gap-px border-b border-lineSoft bg-lineSoft sm:grid-cols-3 lg:grid-cols-6">
+              {[
+                ['Routes', `${movementSummary.routes}`],
+                ['Transition events', `${movementSummary.transitionEvents}`],
+                ['Student trips', fmtNumber(movementSummary.studentTransitions)],
+                ['Student-distance', `${fmtNumber(movementSummary.studentDistanceM / 1000, 1)} km`],
+                ['Tight transfers', `${movementSummary.tight}`],
+                ['Unknown distance', `${movementSummary.unknown}`],
+              ].map(([label, value]) => (
+                <div key={label} className="bg-panel px-3 py-2.5">
+                  <div className="font-mono text-[8px] uppercase tracking-[0.06em] text-faint">{label}</div>
+                  <div className="mt-0.5 font-mono text-[15px] tabular-nums text-ink">{value}</div>
+                </div>
+              ))}
+            </div>
+            {movementTransitions.length === 0 ? (
+              <EmptyState
+                title={movementQuery.isLoading ? 'Estimating movement…' : 'No transitions into this slot'}
+                description={movementQuery.isLoading ? 'The movement engine is evaluating consecutive sessions for every cohort.' : 'No cohort has a consecutive session arriving in the selected slot with an assigned room. Choose a different day or slot, or include same-building transitions.'}
+              />
+            ) : (
+              <div className="max-h-[290px] divide-y divide-lineSoft overflow-y-auto scroll-thin">
+                {movementTransitions.map((transition) => (
+                  <button
+                    key={transition.transition_id}
+                    type="button"
+                    onClick={() => setActiveTransition(transition)}
+                    className={cn(
+                      'focus-ring flex w-full flex-wrap items-center gap-x-4 gap-y-1 px-4 py-2.5 text-left transition-colors hover:bg-subtleHover',
+                      activeTransition?.transition_id === transition.transition_id && 'bg-cyan/[0.05]',
+                    )}
+                  >
+                    <span className={cn('h-1.5 w-1.5 shrink-0 rounded-full', movementTone(transition).dot)} />
+                    <span className="min-w-0 flex-1">
+                      <span className="flex flex-wrap items-center gap-1.5 text-[11px] font-medium text-ink">
+                        <span className="truncate">{transition.from_building_name}</span>
+                        <ArrowRight className="h-3 w-3 shrink-0 text-faint" />
+                        <span className="truncate">{transition.to_building_name}</span>
+                        {transition.same_building && <Badge tone="neutral">same building</Badge>}
+                        {transition.is_cross_day && <Badge tone="neutral">cross-day</Badge>}
+                      </span>
+                      <span className="mt-0.5 block truncate font-mono text-[8.5px] uppercase tracking-[0.04em] text-faint">
+                        {transition.cohort_name} · {transition.from_course_code} → {transition.to_course_code} · {transition.from_time}–{transition.to_time}
+                      </span>
+                    </span>
+                    <span className="shrink-0 text-right font-mono text-[8.5px] leading-relaxed text-muted">
+                      <span className="block">{fmtNumber(transition.student_count)} students</span>
+                      <span className="block text-faint">gap {formatGap(transition.time_gap_min)} · walk {transition.walking_time_min === null ? 'unknown' : `${transition.walking_time_min} min`}</span>
+                    </span>
+                    <MovementStatusBadge transition={transition} />
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-lineSoft bg-subtle px-4 py-2 font-mono text-[8px] uppercase tracking-[0.05em] text-faint">
+              <span>Estimate derived from the persisted timetable · student trips count transition events, not unique students</span>
+              <span>{movementQuery.data ? `${movementQuery.data.summary.warning_count} engine warnings` : '—'}</span>
+            </div>
+          </Panel>
+
+          <Panel>
+            <PanelHeader
+              eyebrow="Room board · selected slot"
               title="Availability by slot"
               subtitle="A room is available when no scheduled session covers the selected slot. Change the day or slot to step through the week."
               action={
@@ -551,7 +801,7 @@ export function DigitalCampusPage() {
       <SessionModal session={detail} onClose={() => setDetail(null)} room={activeRoom ?? null} />
 
       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-lineSoft pt-3 font-mono text-[8px] uppercase tracking-[0.08em] text-faint/80">
-        <span className="flex items-center gap-1"><MapPin className="h-2.5 w-2.5" /> synthetic campus · 4 blocks</span>
+        <span className="flex items-center gap-1"><MapPin className="h-2.5 w-2.5" /> synthetic campus · {campus.summary.buildings} blocks</span>
         <span className="flex items-center gap-1"><CheckCircle2 className="h-2.5 w-2.5" /> capacity and equipment rules verified at request time</span>
         <span className="flex items-center gap-1"><CalendarClock className="h-2.5 w-2.5" /> {schedule.length} baseline sessions</span>
       </div>
@@ -565,12 +815,18 @@ function CampusMap({
   onSelect,
   stats,
   matchIds,
+  transitions,
+  activeTransitionId,
+  onTransitionSelect,
 }: {
   buildings: { id: string; code: string; name: string; zone: string; purpose: string; floors: number; map: { x: number; y: number; w: number; h: number }; accent: string }[]
   selected: string | null
   onSelect: (id: string) => void
   stats: Map<string, { rooms: number; labs: number; capacity: number; sessions: number; hours: number; utilization: number; conflicts: number }>
   matchIds: Set<string>
+  transitions: MovementTransition[]
+  activeTransitionId: string | null
+  onTransitionSelect: (transition: MovementTransition) => void
 }) {
   const roads = [
     'M 420 190 H 468',
@@ -580,13 +836,61 @@ function CampusMap({
     'M 140 520 H 900',
     'M 40 300 H 140',
   ]
+
+  // Aggregate the engine's transitions into one arrow per directed building pair.
+  const movementRoutes = useMemo(() => {
+    const byId = new Map(buildings.map((building) => [building.id, building]))
+    const grouped = new Map<string, { fromId: string; toId: string; students: number; transitions: MovementTransition[]; tone: MovementTone }>()
+    const rank: Record<MovementTone, number> = { feasible: 0, tight: 1, unknown: 2, infeasible: 3 }
+    for (const transition of transitions) {
+      if (transition.same_building) continue
+      if (!byId.has(transition.from_building_id) || !byId.has(transition.to_building_id)) continue
+      const key = `${transition.from_building_id}:${transition.to_building_id}`
+      const tone = movementTone(transition).key
+      const existing = grouped.get(key)
+      if (existing) {
+        existing.students += transition.student_count
+        existing.transitions.push(transition)
+        if (rank[tone] > rank[existing.tone]) existing.tone = tone
+      } else {
+        grouped.set(key, { fromId: transition.from_building_id, toId: transition.to_building_id, students: transition.student_count, transitions: [transition], tone })
+      }
+    }
+    return Array.from(grouped.entries()).map(([key, group]) => {
+      const from = byId.get(group.fromId)!
+      const to = byId.get(group.toId)!
+      const fromCentre = { x: from.map.x + from.map.w / 2, y: from.map.y + from.map.h / 2 }
+      const toCentre = { x: to.map.x + to.map.w / 2, y: to.map.y + to.map.h / 2 }
+      const start = pointOnBoxEdge(from.map, toCentre.x, toCentre.y)
+      const end = pointOnBoxEdge(to.map, fromCentre.x, fromCentre.y)
+      const dx = end.x - start.x
+      const dy = end.y - start.y
+      const length = Math.hypot(dx, dy) || 1
+      // A fixed perpendicular offset keeps A→B and B→A on opposite sides of the
+      // straight line, so their arrows and volume labels never overprint.
+      const control = { x: (start.x + end.x) / 2 - (dy / length) * 9, y: (start.y + end.y) / 2 + (dx / length) * 9 }
+      const label = { x: start.x * 0.25 + control.x * 0.5 + end.x * 0.25, y: start.y * 0.25 + control.y * 0.5 + end.y * 0.25 }
+      const active = group.transitions.some((transition) => transition.transition_id === activeTransitionId)
+      return { key, ...group, fromName: from.name, toName: to.name, start, end, control, label, active, width: 1.4 + Math.min(4.2, Math.log2(group.students + 1)) }
+    })
+  }, [buildings, transitions, activeTransitionId])
+
+  // A four-block campus funnels every flow through one junction. Rendering all
+  // directed routes at once turns that junction into an unreadable knot, so the
+  // map traces one route at a time: the selected transition, or the busiest
+  // route when nothing is selected. All routes stay listed beside the map.
+  const displayedRoutes = useMemo(() => {
+    if (activeTransitionId) return movementRoutes.filter((route) => route.active)
+    return [...movementRoutes].sort((left, right) => right.students - left.students).slice(0, 1)
+  }, [movementRoutes, activeTransitionId])
+
   return (
     <div className="relative overflow-hidden rounded-md border border-lineSoft bg-cell">
       <div className="pointer-events-none absolute inset-0 bg-grid opacity-40" />
-      <svg viewBox="0 0 1000 640" className="relative w-full" role="img" aria-label="Illustrative campus masterplan with four buildings">
+      <svg viewBox="0 0 1000 640" className="relative w-full" role="img" aria-label={`Illustrative campus masterplan with ${buildings.length} building blocks`}>
         <defs>
           <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <line x1="0" y1="0" x2="0" y2="7" stroke="rgba(255,255,255,0.035)" strokeWidth="1" />
+            <line x1="0" y1="0" x2="0" y2="7" style={{ stroke: 'rgb(var(--c-mapHatch) / 0.07)' }} strokeWidth="1" />
           </pattern>
           <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur stdDeviation="10" result="blur" />
@@ -595,12 +899,27 @@ function CampusMap({
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          {(Object.keys(MOVEMENT_COLOURS) as MovementTone[]).map((tone) => (
+            <marker
+              key={tone}
+              id={`move-arrow-${tone}`}
+              viewBox="0 0 10 10"
+              refX="8"
+              refY="5"
+              markerUnits="userSpaceOnUse"
+              markerWidth="15"
+              markerHeight="15"
+              orient="auto-start-reverse"
+            >
+              <path d="M 0 0 L 10 5 L 0 10 z" fill={MOVEMENT_COLOURS[tone]} />
+            </marker>
+          ))}
         </defs>
         <rect x="0" y="0" width="1000" height="640" fill="url(#hatch)" opacity="0.6" />
-        <path d="M 0 300 C 190 280 300 320 470 300 S 760 260 1000 300" fill="none" stroke="#1C2A40" strokeWidth="38" strokeLinecap="round" />
-        <path d="M 720 0 V 640" fill="none" stroke="#1C2A40" strokeWidth="30" strokeLinecap="round" />
-        <path d="M 0 552 H 1000" fill="none" stroke="#1C2A40" strokeWidth="24" />
-        {roads.map((road, index) => <path key={index} d={road} fill="none" stroke="#2A3A53" strokeWidth="9" strokeLinecap="round" strokeDasharray="1 14" />)}
+        <path d="M 0 300 C 190 280 300 320 470 300 S 760 260 1000 300" fill="none" style={{ stroke: 'rgb(var(--c-mapRoad))' }} strokeWidth="38" strokeLinecap="round" />
+        <path d="M 720 0 V 640" fill="none" style={{ stroke: 'rgb(var(--c-mapRoad))' }} strokeWidth="30" strokeLinecap="round" />
+        <path d="M 0 552 H 1000" fill="none" style={{ stroke: 'rgb(var(--c-mapRoad))' }} strokeWidth="24" />
+        {roads.map((road, index) => <path key={index} d={road} fill="none" style={{ stroke: 'rgb(var(--c-mapLane))' }} strokeWidth="9" strokeLinecap="round" strokeDasharray="1 14" />)}
         {buildings.map((building) => {
           const { x, y, w, h } = building.map
           const isSelected = selected === building.id
@@ -619,18 +938,18 @@ function CampusMap({
               opacity={matches ? 1 : 0.28}
             >
               <rect x={x - 10} y={y - 10} width={w + 20} height={h + 20} rx="14" fill={building.accent} opacity={isSelected ? 0.08 : 0} filter={isSelected ? 'url(#glow)' : undefined} />
-              <rect x={x} y={y} width={w} height={h} rx="10" fill="#0C1728" stroke={isSelected ? building.accent : '#2A3A53'} strokeWidth={isSelected ? 2 : 1} />
-              <rect x={x} y={y} width={w} height={h} rx="10" fill={building.accent} opacity="0.045" />
+              <rect x={x} y={y} width={w} height={h} rx="10" style={{ fill: 'rgb(var(--c-mapBlock))', stroke: isSelected ? building.accent : 'rgb(var(--c-mapStroke))' }} strokeWidth={isSelected ? 2 : 1} />
+              <rect x={x} y={y} width={w} height={h} rx="10" fill={building.accent} opacity="0.05" />
               <rect x={x} y={y} width={w} height="3" rx="1.5" fill={building.accent} opacity={isSelected ? 1 : 0.7} />
               <rect x={x + 24} y={y + 30} width="9" height="9" rx="2" fill={building.accent} />
-              <text x={x + 42} y={y + 39} fill="#F1F5FC" fontSize="20" fontFamily="Inter, sans-serif" fontWeight="600" letterSpacing="-0.4">{building.code}</text>
-              <text x={x + 24} y={y + 66} fill="#9AA9BF" fontSize="13" fontFamily="Inter, sans-serif">{building.name}</text>
-              <text x={x + 24} y={y + 84} fill="#6B7C93" fontSize="10.5" fontFamily="JetBrains Mono, monospace" letterSpacing="0.4">{building.zone.toUpperCase()}</text>
-              <line x1={x + 24} y1={y + h - 62} x2={x + w - 24} y2={y + h - 62} stroke="#25334A" strokeWidth="1" />
-              <text x={x + 24} y={y + h - 42} fill="#9AA9BF" fontSize="10.5" fontFamily="JetBrains Mono, monospace">{stat?.rooms ?? 0} SPACES · {stat?.labs ?? 0} LABS</text>
-              <text x={x + 24} y={y + h - 25} fill={building.accent} fontSize="10.5" fontFamily="JetBrains Mono, monospace">{Math.round(stat?.utilization ?? 0)}% USED</text>
-              <text x={x + w - 24} y={y + h - 42} textAnchor="end" fill="#6B7C93" fontSize="10" fontFamily="JetBrains Mono, monospace">{stat?.capacity ?? 0} SEATS</text>
-              <text x={x + w - 24} y={y + h - 25} textAnchor="end" fill="#6B7C93" fontSize="10" fontFamily="JetBrains Mono, monospace">F{Array.from({ length: building.floors }).map((_, index) => index + 1).join('·F')}</text>
+              <text x={x + 42} y={y + 41} style={{ fill: 'rgb(var(--c-ink))' }} fontSize="25" fontFamily="Inter, sans-serif" fontWeight="600" letterSpacing="-0.4">{building.code}</text>
+              <text x={x + 24} y={y + 70} style={{ fill: 'rgb(var(--c-muted))' }} fontSize="15" fontFamily="Inter, sans-serif" fontWeight="500">{building.name}</text>
+              <text x={x + 24} y={y + 90} style={{ fill: 'rgb(var(--c-faint))' }} fontSize="11.5" fontFamily="JetBrains Mono, monospace" letterSpacing="0.4">{building.zone.toUpperCase()}</text>
+              <line x1={x + 24} y1={y + h - 64} x2={x + w - 24} y2={y + h - 64} style={{ stroke: 'rgb(var(--c-mapStroke))' }} strokeWidth="1" />
+              <text x={x + 24} y={y + h - 43} style={{ fill: 'rgb(var(--c-muted))' }} fontSize="12" fontFamily="JetBrains Mono, monospace">{stat?.rooms ?? 0} {stat?.rooms === 1 ? 'SPACE' : 'SPACES'} · {stat?.labs ?? 0} {(stat?.labs ?? 0) === 1 ? 'LAB' : 'LABS'}</text>
+              <text x={x + 24} y={y + h - 24} fill={building.accent} fontSize="12" fontFamily="JetBrains Mono, monospace">{Math.round(stat?.utilization ?? 0)}% USED</text>
+              <text x={x + w - 24} y={y + h - 43} textAnchor="end" style={{ fill: 'rgb(var(--c-faint))' }} fontSize="11.5" fontFamily="JetBrains Mono, monospace">{stat?.capacity ?? 0} SEATS</text>
+              <text x={x + w - 24} y={y + h - 24} textAnchor="end" style={{ fill: 'rgb(var(--c-faint))' }} fontSize="11.5" fontFamily="JetBrains Mono, monospace">F{Array.from({ length: building.floors }).map((_, index) => index + 1).join('·F')}</text>
               {isSelected && (
                 <g>
                   <rect x={x + w - 92} y={y + 14} width="68" height="19" rx="4" fill={building.accent} opacity="0.16" />
@@ -641,15 +960,60 @@ function CampusMap({
             </g>
           )
         })}
-        <g transform="translate(900 580)">
-          <circle r="19" fill="#0A1322" stroke="#25334A" />
-          <path d="M0 -11 L5 7 L0 3 L-5 7 Z" fill="#6B7C93" />
-          <text y="31" textAnchor="middle" fill="#6B7C93" fontSize="8" fontFamily="JetBrains Mono, monospace">N</text>
+        <g aria-label="Estimated student movement between buildings">
+          {displayedRoutes.map((route) => (
+            <g
+              key={route.key}
+              role="button"
+              tabIndex={0}
+              aria-label={`${route.fromName} to ${route.toName}, ${route.transitions.length} transitions, ${route.students} student trips, ${MOVEMENT_LABELS[route.tone]}`}
+              className="cursor-pointer outline-none"
+              onClick={() => onTransitionSelect(route.transitions[0])}
+              onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onTransitionSelect(route.transitions[0]) } }}
+            >
+              <path
+                d={`M ${route.start.x} ${route.start.y} Q ${route.control.x} ${route.control.y} ${route.end.x} ${route.end.y}`}
+                fill="none"
+                stroke={MOVEMENT_COLOURS[route.tone]}
+                strokeWidth={route.active ? route.width + 1.6 : route.width}
+                strokeLinecap="round"
+                strokeDasharray={route.tone === 'unknown' ? '7 6' : undefined}
+                opacity={route.active || displayedRoutes.length === 1 ? 1 : 0.55}
+                markerEnd={`url(#move-arrow-${route.tone})`}
+              />
+              <circle cx={route.start.x} cy={route.start.y} r={route.active ? 4 : 2.6} fill={MOVEMENT_COLOURS[route.tone]} />
+              {(route.active || displayedRoutes.length === 1) && (
+                <text
+                  x={route.label.x}
+                  y={route.label.y}
+                  textAnchor="middle"
+                  style={{ fill: 'rgb(var(--c-ink))', stroke: 'rgb(var(--c-mapBlock))' }}
+                  fontSize="12"
+                  fontFamily="JetBrains Mono, monospace"
+                  paintOrder="stroke"
+                  strokeWidth="4"
+                >
+                  {route.students}
+                </text>
+              )}
+              <title>{`${route.fromName} → ${route.toName}: ${route.transitions.length} transition${route.transitions.length === 1 ? '' : 's'}, ${route.students} student trips · ${MOVEMENT_LABELS[route.tone]}`}</title>
+            </g>
+          ))}
         </g>
-        <text x="56" y="600" fill="#43536B" fontSize="9" fontFamily="JetBrains Mono, monospace" letterSpacing="1">ILLUSTRATIVE SITE PLAN · NOT TO SCALE</text>
+        <g transform="translate(900 580)">
+          <circle r="19" style={{ fill: 'rgb(var(--c-mapBlock))', stroke: 'rgb(var(--c-mapStroke))' }} />
+          <path d="M0 -11 L5 7 L0 3 L-5 7 Z" style={{ fill: 'rgb(var(--c-faint))' }} />
+          <text y="31" textAnchor="middle" style={{ fill: 'rgb(var(--c-faint))' }} fontSize="8" fontFamily="JetBrains Mono, monospace">N</text>
+        </g>
+        <text x="56" y="600" style={{ fill: 'rgb(var(--c-faint))' }} fontSize="9" fontFamily="JetBrains Mono, monospace" letterSpacing="1">ILLUSTRATIVE SITE PLAN · NOT TO SCALE</text>
       </svg>
     </div>
   )
+}
+
+function MovementStatusBadge({ transition }: { transition: MovementTransition }) {
+  const tone = movementTone(transition)
+  return <Badge tone={tone.tone}>{tone.label}</Badge>
 }
 
 function SessionModal({ session, onClose, room }: { session: ScheduleEntry | null; onClose: () => void; room: Room | null }) {

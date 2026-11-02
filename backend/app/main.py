@@ -5,8 +5,14 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+# Load backend/.env before anything reads configuration. Real environment
+# variables always win; this only fills in what the file provides.
+from .env import load_env
+
+load_env()
+
 from .api import router
-from .db import Base, SessionLocal, engine
+from .db import Base, SessionLocal, engine, ensure_schema
 from .jobs import seed_demo_scenarios
 from .seed import seed_if_empty
 
@@ -14,6 +20,7 @@ from .seed import seed_if_empty
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
+    ensure_schema()
     db = SessionLocal()
     try:
         seeded = seed_if_empty(db)

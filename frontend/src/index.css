@@ -37,6 +37,13 @@
     --c-warning: 217 119 6; /* #D97706                     */
     --c-critical: 225 29 72; /* #E11D48                     */
 
+    /* Digital campus map — light theme */
+    --c-mapBlock: 255 255 255;
+    --c-mapStroke: 203 213 225;
+    --c-mapRoad: 226 232 240;
+    --c-mapLane: 203 213 225;
+    --c-mapHatch: 15 23 42;
+
     --shadow-panel: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
     --shadow-float: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
     --shadow-cyan: 0 0 0 1px rgba(2, 132, 199, 0.28), 0 8px 30px -14px rgba(14, 165, 233, 0.35);
@@ -78,6 +85,13 @@
     --c-success: 53 211 154;
     --c-warning: 245 184 75;
     --c-critical: 255 100 124;
+
+    /* Digital campus map — dark theme */
+    --c-mapBlock: 12 23 40;
+    --c-mapStroke: 42 58 83;
+    --c-mapRoad: 28 42 64;
+    --c-mapLane: 42 58 83;
+    --c-mapHatch: 255 255 255;
 
     --shadow-panel: inset 0 1px 0 rgba(255, 255, 255, 0.025), 0 20px 50px -32px rgba(0, 0, 0, 0.9);
     --shadow-float: 0 24px 70px -24px rgba(0, 0, 0, 0.85);

@@ -182,7 +182,10 @@ def test_optimizer_returns_feasible_audited_plans(campus):
     plans = outcome["plans"]
     assert len(plans) == 3
     for plan in plans:
-        assert plan["status"] == "FEASIBLE", (plan["label"], plan["status"], plan["audit"])
+        # Under CPU contention the solver may return UNKNOWN after the time
+        # limit; the audited constructive fallback is then reported as
+        # FEASIBLE_HEURISTIC rather than mislabelled as a solver result.
+        assert plan["status"] in {"FEASIBLE", "FEASIBLE_HEURISTIC"}, (plan["label"], plan["status"], plan["audit"])
         assert plan["audit"]["passed"] is True
         assert plan["audit"]["violations"] == []
         assert plan["metrics"]["unassigned_sessions"] == 0
@@ -465,3 +468,22 @@ def test_scenario_lifecycle_create_optimize_compare_export(client):
     assert report.status_code == 200
     assert "text/html" in report.headers["content-type"]
     assert "MIRRORWORLD" in report.text
+
+
+def test_phase3_movement_integration(client, campus):
+    # Baseline movement
+    resp = client.get("/api/movement")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "transitions" in data
+    assert "summary" in data
+    assert data["summary"]["total_transitions"] > 0
+    assert data["summary"]["unique_routes"] > 0
+
+    # Test query filters
+    slot_resp = client.get("/api/movement", params={"day": 0, "slot": 1})
+    assert slot_resp.status_code == 200
+    slot_data = slot_resp.json()
+    assert slot_data["day"] == 0
+    assert slot_data["slot"] == 1
+

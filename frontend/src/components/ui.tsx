@@ -9,6 +9,8 @@ import {
   Info,
   Loader2,
   Search,
+  Sun,
+  Moon,
   X,
 } from 'lucide-react'
 import {
@@ -42,6 +44,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconRight?: ReactNode
 }
 
+const buttonIcons: Record<string, ReactNode> = {
+  sun: <Sun className="h-3 w-3" />,
+  moon: <Moon className="h-3 w-3" />,
+}
+
 const buttonVariants: Record<ButtonVariant, string> = {
   primary:
     'border-cyan/50 bg-[linear-gradient(180deg,rgba(56,217,245,0.22),rgba(79,140,255,0.14))] text-cyan shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_24px_-16px_rgba(56,217,245,0.7)] hover:border-cyan/80 hover:bg-[linear-gradient(180deg,rgba(56,217,245,0.3),rgba(79,140,255,0.18))] active:translate-y-px',
@@ -57,6 +64,31 @@ const buttonSizes: Record<ButtonSize, string> = {
   xs: 'h-7 gap-1.5 px-2.5 text-[10.5px]',
   sm: 'h-8 gap-2 px-3 text-[11.5px]',
   md: 'h-9 gap-2 px-4 text-[12px]',
+}
+
+export function ThemeToggleButton({ className }: { className?: string }) {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
+  if (!mounted) return null
+
+  const currentTheme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
+  const currentIcon = buttonIcons[currentTheme === 'dark' ? 'moon' : 'sun']
+
+  return (
+    <Button
+      variant="secondary"
+      size="sm"
+      iconLeft={currentIcon}
+      onClick={() => {
+        const next = currentTheme === 'dark' ? 'light' : 'dark'
+        document.documentElement.dataset.theme = next
+        try { localStorage.setItem('mirrorworld-theme', next) } catch {}
+      }}
+      className={className}
+    >
+      {currentTheme === 'dark' ? 'Bright Mode' : 'Dark Mode'}
+    </Button>
+  )
 }
 
 export function Button({
@@ -165,7 +197,7 @@ export function StatusBadge({ status, className }: { status: string; className?:
       ? 'success'
       : status === 'INFEASIBLE' || status === 'failed' || status === 'AUDIT_FAILED'
         ? 'critical'
-        : status === 'UNKNOWN' || status === 'optimizing' || status === 'running' || status === 'cancelling'
+        : status === 'UNKNOWN' || status === 'FEASIBLE_HEURISTIC' || status === 'timeout' || status === 'optimizing' || status === 'running' || status === 'cancelling'
           ? 'warning'
           : status === 'simulated' || status === 'queued'
             ? 'info'

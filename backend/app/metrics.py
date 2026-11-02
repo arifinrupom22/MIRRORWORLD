@@ -37,6 +37,8 @@ def compute_metrics(
     operating_end_slot: int = 6,
     available_room_ids: set[str] | None = None,
     unassigned_details: list[dict] | None = None,
+    removed_equipment: set[str] | None = None,
+    teacher_limits: dict[str, int] | None = None,
 ) -> dict:
     available_room_ids = set(available_room_ids) if available_room_ids is not None else {r["id"] for r in campus.rooms}
     unassigned_details = unassigned_details or []
@@ -151,7 +153,8 @@ def compute_metrics(
                 supported = ", ".join(room.get("lab_types") or []) or "no lab types"
                 mismatch_reason = f"Requires a {course['needs_lab']} lab; {room['code']} supports {supported}."
             else:
-                missing = [e for e in course.get("required_equipment") or [] if e not in (room.get("equipment") or [])]
+                available_equipment = set(room.get("equipment") or []) - set(removed_equipment or set())
+                missing = [e for e in course.get("required_equipment") or [] if e not in available_equipment]
                 if missing:
                     mismatch_reason = f"Missing equipment: {', '.join(missing)}."
         if mismatch_reason:
@@ -195,7 +198,7 @@ def compute_metrics(
             peak_slot_label = _slot_label(day, slot)
 
     rooms_used = {v["room_id"] for v in views}
-    slots_per_room = 5 * (operating_end_slot + 1) * catalog.SLOT_HOURS
+    slots_per_room = catalog.TEACHING_DAYS * (operating_end_slot + 1) * catalog.SLOT_HOURS
     available_room_hours = len(available_room_ids) * slots_per_room
     active_room_hours = max(1, len(rooms_used)) * slots_per_room
     room_utilization = (duration_hours / available_room_hours * 100) if available_room_hours else 0.0
@@ -223,15 +226,16 @@ def compute_metrics(
     loads = list(teacher_hours.values())
     workload_std = pstdev(loads) if len(loads) > 1 else 0.0
     max_teacher_id = max(teacher_hours, key=lambda k: teacher_hours[k]) if teacher_hours else None
+    limits = teacher_limits or {}
     overloaded = [
         {
             "teacher_id": tid,
             "teacher_name": campus.teacher_index[tid]["name"],
             "load_hours": round(hours, 2),
-            "limit_hours": campus.teacher_index[tid]["max_weekly_hours"],
+            "limit_hours": int(limits.get(tid, campus.teacher_index[tid]["max_weekly_hours"])),
         }
         for tid, hours in teacher_hours.items()
-        if hours > campus.teacher_index[tid]["max_weekly_hours"] + 1e-6
+        if hours > int(limits.get(tid, campus.teacher_index[tid]["max_weekly_hours"])) + 1e-6
     ]
 
     movement_m = 0
